@@ -1,0 +1,5 @@
+{
+  "name": "VogueRent",
+  "description": "A professional dress rental management system with real-time availability tracking, inventory management, and cleaning buffer logic.",
+  "requestFramePermissions": []
+}

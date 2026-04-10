@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "Dress": {
+      "title": "Dress Design",
+      "description": "The design template for a dress, including metadata and cleaning requirements.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the dress design" },
+        "description": { "type": "string", "description": "Detailed description" },
+        "category": { "type": "string", "description": "e.g., Evening, Wedding, Cocktail" },
+        "basePrice": { "type": "number", "description": "Daily rental price" },
+        "cleaningBufferDays": { "type": "number", "description": "Days required for cleaning after return" },
+        "imageUrl": { "type": "string", "format": "uri", "description": "Primary image of the dress" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "basePrice", "cleaningBufferDays"]
+    },
+    "InventoryItem": {
+      "title": "Physical Item",
+      "description": "A specific physical instance of a dress design.",
+      "type": "object",
+      "properties": {
+        "dressId": { "type": "string", "description": "Reference to the Dress entity" },
+        "size": { "type": "string", "description": "Size of this specific item" },
+        "color": { "type": "string", "description": "Color of this specific item" },
+        "status": { "type": "string", "enum": ["available", "maintenance", "retired"] },
+        "sku": { "type": "string", "description": "Unique identifier for this physical item" }
+      },
+      "required": ["dressId", "size", "status"]
+    },
+    "Reservation": {
+      "title": "Booking",
+      "description": "A rental booking for a specific inventory item.",
+      "type": "object",
+      "properties": {
+        "itemId": { "type": "string", "description": "Reference to the InventoryItem" },
+        "dressId": { "type": "string", "description": "Reference to the Dress (for easier querying)" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string", "format": "email" },
+        "startDate": { "type": "string", "format": "date-time", "description": "Rental start date" },
+        "endDate": { "type": "string", "format": "date-time", "description": "Rental end date" },
+        "bufferEndDate": { "type": "string", "format": "date-time", "description": "endDate + cleaningBufferDays" },
+        "totalPrice": { "type": "number" },
+        "status": { "type": "string", "enum": ["confirmed", "cancelled", "completed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["itemId", "startDate", "endDate", "status"]
+    },
+    "User": {
+      "title": "Staff User",
+      "description": "User profile for staff members.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "staff"] },
+        "displayName": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/dresses/{dressId}": {
+      "schema": "Dress",
+      "description": "Collection of dress designs."
+    },
+    "/inventory_items/{itemId}": {
+      "schema": "InventoryItem",
+      "description": "Collection of physical dress items."
+    },
+    "/reservations/{reservationId}": {
+      "schema": "Reservation",
+      "description": "Collection of rental bookings."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of staff user profiles."
+    }
+  }
+}

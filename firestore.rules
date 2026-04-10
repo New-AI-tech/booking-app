@@ -1,0 +1,136 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: dresses
+// Fields:
+//   - name: string (required)
+//   - description: string
+//   - category: string
+//   - basePrice: number (required)
+//   - cleaningBufferDays: number (required)
+//   - imageUrl: string
+//   - createdAt: timestamp
+//
+// Collection: inventory_items
+// Fields:
+//   - dressId: string (required)
+//   - size: string (required)
+//   - color: string
+//   - status: string (available, maintenance, retired)
+//   - sku: string
+//
+// Collection: reservations
+// Fields:
+//   - itemId: string (required)
+//   - dressId: string (required)
+//   - customerName: string
+//   - customerEmail: string
+//   - startDate: timestamp (required)
+//   - endDate: timestamp (required)
+//   - bufferEndDate: timestamp (required)
+//   - totalPrice: number
+//   - status: string (confirmed, cancelled, completed)
+//   - createdAt: timestamp
+//
+// Collection: users
+// Fields:
+//   - email: string (required)
+//   - role: string (admin, staff)
+//   - displayName: string
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "ahmedbackerjr@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isStaff() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'staff']);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidDress(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.basePrice is number && data.basePrice >= 0 &&
+             data.cleaningBufferDays is number && data.cleaningBufferDays >= 0;
+    }
+
+    function isValidInventoryItem(data) {
+      return data.dressId is string &&
+             data.size is string && data.size.size() > 0 &&
+             data.status in ['available', 'maintenance', 'retired'];
+    }
+
+    function isValidReservation(data) {
+      return data.itemId is string &&
+             data.dressId is string &&
+             data.startDate is timestamp &&
+             data.endDate is timestamp &&
+             data.bufferEndDate is timestamp &&
+             data.startDate < data.endDate &&
+             data.endDate <= data.bufferEndDate &&
+             data.status in ['confirmed', 'cancelled', 'completed'];
+    }
+
+    function isValidUser(data) {
+      return data.email is string && isValidEmail(data.email) &&
+             data.role in ['admin', 'staff'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /dresses/{dressId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAdmin() && isValidDress(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /inventory_items/{itemId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isStaff() && isValidInventoryItem(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /reservations/{reservationId} {
+      allow read: if isAuthenticated();
+      allow create: if isStaff() && isValidReservation(request.resource.data);
+      allow update: if isStaff() && isValidReservation(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() && isValidUser(request.resource.data);
+      allow update: if isAdmin() && isValidUser(request.resource.data);
+    }
+  }
+}
