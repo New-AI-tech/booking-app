@@ -1,10 +1,9 @@
 {
-  "projectId": "gen-lang-client-0030412115",
-  "appId": "1:398504775854:web:4fd8d5210d0883bf295d3f",
-  "apiKey": "AIzaSyCpw-nwu-tUtPwg4Ji6KgAW2J4dPG53vAw",
-  "authDomain": "gen-lang-client-0030412115.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-29b0ca02-d4ed-448b-a343-c15a31ecdbac",
-  "storageBucket": "gen-lang-client-0030412115.firebasestorage.app",
-  "messagingSenderId": "398504775854",
-  "measurementId": ""
+  "apiKey": "AIzaSyD9Hts2rQHBKpmNSwnIwiqV_0tI8JRnQL8",
+  "authDomain": "booking-app-d2454.firebaseapp.com",
+  "projectId": "booking-app-d2454",
+  "storageBucket": "booking-app-d2454.firebasestorage.app",
+  "messagingSenderId": "161020822624",
+  "appId": "1:161020822624:web:c1476a35f9d431cfa4af05",
+  "measurementId": "G-5ZK4E7SX9L"
 }
