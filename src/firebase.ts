@@ -1,11 +1,24 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager
+} from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore with persistent cache and forced long polling 
+// to ensure stability in restrictive network environments.
+export const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager()
+  }),
+  experimentalForceLongPolling: true
+});
+
 export const auth = getAuth(app);
-export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 
 export enum OperationType {
@@ -54,7 +67,8 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     },
     operationType,
     path
-  }
+  };
+
   console.error('Firestore Error: ', JSON.stringify(errInfo));
   throw new Error(JSON.stringify(errInfo));
 }
