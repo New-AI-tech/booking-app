@@ -3,18 +3,22 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/
 import {
   initializeFirestore,
   persistentLocalCache,
-  persistentMultipleTabManager
+  persistentMultipleTabManager,
+  setLogLevel
 } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
+// Debug logging to pinpoint connection failures
+setLogLevel('debug');
+
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with persistent cache and forced long polling 
-// to ensure stability in restrictive network environments.
+// Initialize Firestore with robust connection settings
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({
     tabManager: persistentMultipleTabManager()
   }),
+  // Force HTTP long polling to bypass network interference
   experimentalForceLongPolling: true
 });
 
