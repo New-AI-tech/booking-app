@@ -1,5 +1,8 @@
-export interface BookingWithDress extends Reservation {
-  dress?: Dress;
+export interface UserProfile {
+  uid: string;
+  email: string;
+  role: 'admin' | 'staff' | 'customer';
+  displayName?: string;
 }
 export interface Dress {
   id: string;
@@ -7,37 +10,22 @@ export interface Dress {
   description?: string;
   price?: number;
   image?: string;
-}
-export interface IncomeRecord {
-  id: string;
-  amount: number;
-  date: string;
-  description: string;
-}
-export interface InventoryItem {
-  id: string;
-  name: string;
-  description?: string;
-  purchaseCost?: number;
-  targetROI?: number;
-  rentalPrice?: number;
-  status: 'Available' | 'Rented' | 'In Maintenance' | string;
-  image?: string;
-  size?: string;
+  category?: string;
 }
 export interface Reservation {
   id: string;
   dressId: string;
-  clientId?: string;
-  customerName?: string;
-  customerEmail?: string;
-  outDate: Date | string;
-  returnDate: Date | string;
-  startDate: Date | string;
-  endDate: Date | string;
-  bufferEndDate?: Date | string;
+  itemId?: string;
+  outDate: any;
+  returnDate: any;
+  startDate?: any;
+  endDate?: any;
+  bufferEndDate?: any;
+  status: string;
   rentalFee: number;
-  totalPrice: number;
+  totalPrice?: number;
   depositAmount: number;
-  status: 'Pending' | 'Active' | 'Returned' | 'Late' | string;
+}
+export interface BookingWithDress extends Reservation {
+  dress?: Dress;
 }

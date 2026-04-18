@@ -65,8 +65,8 @@ export function AvailabilityChecker({ dress }: Props) {
       const available = allItems.filter(item => {
         const itemReservations = overlappingReservations.filter(res => res.itemId === item.id);
         return !itemReservations.some(res => {
-          const resStart = res.startDate.toDate();
-          const resBufferEnd = res.bufferEndDate.toDate();
+          const resStart = res.startDate;
+          const resBufferEnd = res.bufferEndDate;
           // Client-side check for actual overlap, as Firestore query is an approximation
           return start <= resBufferEnd && end >= resStart;
         });
