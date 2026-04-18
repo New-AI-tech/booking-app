@@ -4,7 +4,7 @@ import InvoiceGenerator from '../InvoiceGenerator';
 import { fetchRecentBookings } from '../../services/bookingService';
 import { Reservation, Dress, BookingWithDress } from '../../types';
 
-export default function StaffDashboard() {
+export function StaffDashboard() {
     const [bookings, setBookings] = useState<BookingWithDress[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedInvoice, setSelectedInvoice] = useState<BookingWithDress | null>(null);

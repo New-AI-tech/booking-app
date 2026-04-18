@@ -12,19 +12,22 @@ export interface Dress {
   image?: string;
   category?: string;
 }
+export interface InventoryItem extends Dress {
+  status: string;
+  purchaseCost?: number;
+  targetROI?: number;
+}
 export interface Reservation {
   id: string;
   dressId: string;
-  itemId?: string;
+  customerName?: string;
+  customerEmail?: string;
   outDate: any;
   returnDate: any;
-  startDate?: any;
-  endDate?: any;
-  bufferEndDate?: any;
   status: string;
   rentalFee: number;
-  totalPrice?: number;
   depositAmount: number;
+  totalPrice?: number;
 }
 export interface BookingWithDress extends Reservation {
   dress?: Dress;
