@@ -14,6 +14,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.2.1",
     "@supabase/supabase-js": "^2.103.3",
+    "clsx": "^2.1.1",
     "firebase": "^10.8.0",
     "lucide-react": "^1.8.0",
     "motion": "^12.38.0",
@@ -21,6 +22,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^7.14.1",
+    "tailwind-merge": "^3.5.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
