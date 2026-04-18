@@ -17,7 +17,11 @@ import {
   Loader2,
   User as UserIcon
 } from 'lucide-react';
+ main
 import { motion, AnimatePresence } from 'motion/react';
+
+import { motion, AnimatePresence } from 'framer-motion'; // Changed from 'motion/react' to 'framer-motion'
+ main
 import { BrowserRouter as Router, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom';
 
 // Import Admin and Staff Dashboards

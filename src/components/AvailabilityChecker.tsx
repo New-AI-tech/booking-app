@@ -3,7 +3,7 @@ import { collection, query, where, getDocs, Timestamp, QuerySnapshot } from 'fir
 import { db, handleFirestoreError, OperationType } from '../firebase';
 import { Dress, InventoryItem, Reservation } from '../types';
 import { Calendar, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
   dress: Dress;
