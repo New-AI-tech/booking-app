@@ -11,7 +11,6 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-// Converted from a TS Type to a runtime object/enum to satisfy Manus
 export const OperationType = {
   CREATE: 'create',
   READ: 'read',
@@ -20,7 +19,6 @@ export const OperationType = {
   LIST: 'list'
 } as const;
 
-// Expanded to accept 3 arguments since Manus is passing extra context
 export function handleFirestoreError(operation: any, error: any, context?: any): never {
   console.error(`Firestore Error [${operation}]:`, error, context || '');
   throw new Error(`Operation failed: ${error?.message || 'Unknown error'}`);

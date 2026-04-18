@@ -1,12 +1,5 @@
-export interface BookingWithDress {
-  id: string;
-  customerName: string;
-  customerEmail: string;
-  startDate: Date | string;
-  endDate: Date | string;
-  totalPrice: number;
-  dressId: string;
-  status: 'Pending' | 'Active' | 'Returned' | 'Late' | string;
+export interface BookingWithDress extends Reservation {
+  dress?: Dress;
 }
 export interface Dress {
   id: string;
@@ -37,11 +30,14 @@ export interface Reservation {
   dressId: string;
   clientId?: string;
   customerName?: string;
+  customerEmail?: string;
   outDate: Date | string;
   returnDate: Date | string;
-  startDate?: Date | string;
+  startDate: Date | string;
+  endDate: Date | string;
   bufferEndDate?: Date | string;
   rentalFee: number;
+  totalPrice: number;
   depositAmount: number;
   status: 'Pending' | 'Active' | 'Returned' | 'Late' | string;
 }

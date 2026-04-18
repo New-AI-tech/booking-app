@@ -55,7 +55,7 @@ export const fetchIncomeData = async (month: number, year: number): Promise<Inco
       netProfit
     };
   } catch (error) {
-    handleFirestoreError(error, OperationType.LIST, 'incomeStatement');
+    handleFirestoreError(OperationType.LIST, error, 'incomeStatement');
     throw error;
   }
 };

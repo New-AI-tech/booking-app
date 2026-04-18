@@ -22,7 +22,7 @@ export const fetchMaintenanceLogs = async (month: number, year: number): Promise
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MaintenanceLog));
   } catch (error) {
-    handleFirestoreError(error, OperationType.LIST, 'maintenance_log');
+    handleFirestoreError(OperationType.LIST, error, 'maintenance_log');
     return [];
   }
 };
