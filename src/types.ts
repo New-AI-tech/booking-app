@@ -21,7 +21,6 @@ export interface IncomeRecord {
   date: string;
   description: string;
 }
-
 export interface InventoryItem {
   id: string;
   name: string;
@@ -31,8 +30,8 @@ export interface InventoryItem {
   rentalPrice?: number;
   status: 'Available' | 'Rented' | 'In Maintenance' | string;
   image?: string;
+  size?: string;
 }
-
 export interface Reservation {
   id: string;
   dressId: string;
@@ -40,6 +39,8 @@ export interface Reservation {
   customerName?: string;
   outDate: Date | string;
   returnDate: Date | string;
+  startDate?: Date | string;
+  bufferEndDate?: Date | string;
   rentalFee: number;
   depositAmount: number;
   status: 'Pending' | 'Active' | 'Returned' | 'Late' | string;
