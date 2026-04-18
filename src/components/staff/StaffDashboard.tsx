@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, User, Clock, CheckCircle2, FileText } from 'lucide-react';
+ main
 import InvoiceGenerator from '../InvoiceGenerator';
 import { fetchRecentBookings } from '../../services/bookingService';
 import { Reservation, Dress, BookingWithDress } from '../../types';
+
+import InvoiceGenerator from './InvoiceGenerator';
+import { fetchRecentBookings } from '../../firebase-services/bookingService';
+import { Reservation, Dress } from '../../types';
+
+interface BookingWithDress extends Reservation {
+  dress?: Dress;
+}
+ main
 
 export default function StaffDashboard() {
     const [bookings, setBookings] = useState<BookingWithDress[]>([]);

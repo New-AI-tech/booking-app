@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Download } from 'lucide-react';
+ main
 import { fetchIncomeData } from '../../services/incomeService';
+
+import { fetchIncomeData } from '../../firebase-services/incomeService';
+ main
 
 interface IncomeData {
   revenue: { rental: number; delay: number; total: number; };
