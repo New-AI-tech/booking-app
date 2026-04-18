@@ -1,42 +1,43 @@
-import { Timestamp } from 'firebase/firestore';
-
+export interface BookingWithDress extends Reservation {
+  dress?: Dress;
+}
 export interface Dress {
   id: string;
   name: string;
-  description: string;
-  category: string;
-  basePrice: number;
-  cleaningBufferDays: number;
-  imageUrl: string;
-  createdAt: Timestamp;
+  description?: string;
+  price?: number;
+  image?: string;
 }
-
+export interface IncomeRecord {
+  id: string;
+  amount: number;
+  date: string;
+  description: string;
+}
 export interface InventoryItem {
   id: string;
-  dressId: string;
-  size: string;
-  color: string;
-  status: 'available' | 'maintenance' | 'retired';
-  sku: string;
+  name: string;
+  description?: string;
+  purchaseCost?: number;
+  targetROI?: number;
+  rentalPrice?: number;
+  status: 'Available' | 'Rented' | 'In Maintenance' | string;
+  image?: string;
+  size?: string;
 }
-
 export interface Reservation {
   id: string;
-  itemId: string;
   dressId: string;
-  customerName: string;
-  customerEmail: string;
-  startDate: Timestamp;
-  endDate: Timestamp;
-  bufferEndDate: Timestamp;
+  clientId?: string;
+  customerName?: string;
+  customerEmail?: string;
+  outDate: Date | string;
+  returnDate: Date | string;
+  startDate: Date | string;
+  endDate: Date | string;
+  bufferEndDate?: Date | string;
+  rentalFee: number;
   totalPrice: number;
-  status: 'confirmed' | 'cancelled' | 'completed';
-  createdAt: Timestamp;
-}
-
-export interface UserProfile {
-  uid: string;
-  email: string;
-  role: 'admin' | 'staff';
-  displayName: string;
+  depositAmount: number;
+  status: 'Pending' | 'Active' | 'Returned' | 'Late' | string;
 }

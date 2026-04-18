@@ -75,7 +75,7 @@ export function AvailabilityChecker({ dress }: Props) {
       setAvailableItems(available);
       setHasChecked(true);
     } catch (error) {
-      handleFirestoreError(error, OperationType.LIST, 'reservations');
+      handleFirestoreError(OperationType.LIST, error, 'reservations');
     } finally {
       setChecking(false);
     }
