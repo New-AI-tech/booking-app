@@ -1,4 +1,4 @@
 import React from 'react';
-export default function DressCard({ dress }: { dress: any }) {
-  return <div className="border p-4 rounded-lg shadow-sm">Dress Item</div>;
+export function DressCard({ dress }: { dress: any }) {
+  return <div className="p-4 border rounded">Dress Card</div>;
 }
