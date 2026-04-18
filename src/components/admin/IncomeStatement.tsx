@@ -1,76 +1,37 @@
-// src/components/admin/IncomeStatement.tsx
-// Financial Reporting: Monthly Income Statement
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase.ts';
 import { FileText, Download } from 'lucide-react';
+import { fetchIncomeData } from '../../firebase-services/incomeService';
+
+interface IncomeData {
+  revenue: { rental: number; delay: number; total: number; };
+  variableCosts: { cleaning: number; repairs: number; total: number; };
+  grossProfit: number;
+  fixedCosts: { rent: number; utilities: number; software_subs: number; insurance: number; salaries: number; marketing: number; total: number; };
+  netProfit: number;
+}
 
 export default function IncomeStatement() {
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<IncomeData | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // Default to current month
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [year, setYear] = useState(new Date().getFullYear());
 
     useEffect(() => {
-        fetchIncomeData();
+        const loadIncomeData = async () => {
+            setLoading(true);
+            try {
+                const incomeData = await fetchIncomeData(month, year);
+                setData(incomeData);
+            } catch (err) {
+                console.error(err);
+                setData(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadIncomeData();
     }, [month, year]);
-
-    async function fetchIncomeData() {
-        setLoading(true);
-        try {
-            // Fetch revenues & variable costs from bookings
-            const start = new Date(year, month - 1, 1).toISOString();
-            const end = new Date(year, month, 0).toISOString();
-
-            const { data: bookings } = await supabase
-                .from('bookings')
-                .select('base_rental_fee, delay_fee, cleaning_cost')
-                .gte('start_date', start)
-                .lte('start_date', end);
-
-            const { data: maintenance } = await supabase
-                .from('maintenance_log')
-                .select('cost')
-                .gte('repair_date', start)
-                .lte('repair_date', end);
-
-            const { data: fixedExp } = await supabase
-                .from('fixed_expenses')
-                .select('*')
-                .eq('period_month', month)
-                .eq('period_year', year)
-                .single();
-
-            // Calculations
-            const rentalRev = bookings?.reduce((acc, b) => acc + (b.base_rental_fee || 0), 0) || 0;
-            const delayRev = bookings?.reduce((acc, b) => acc + (b.delay_fee || 0), 0) || 0;
-            const totalRev = rentalRev + delayRev;
-
-            const varCleaning = bookings?.reduce((acc, b) => acc + (b.cleaning_cost || 0), 0) || 0;
-            const varRepair = maintenance?.reduce((acc, m) => acc + (m.cost || 0), 0) || 0;
-            const totalVarCosts = varCleaning + varRepair;
-
-            const grossProfit = totalRev - totalVarCosts;
-
-            const fixed = fixedExp || { rent: 0, utilities: 0, software_subs: 0, insurance: 0, salaries: 0, marketing: 0 };
-            const totalFixed = fixed.rent + fixed.utilities + fixed.software_subs + fixed.insurance + fixed.salaries + fixed.marketing;
-
-            const netProfit = grossProfit - totalFixed;
-
-            setData({
-                revenue: { rental: rentalRev, delay: delayRev, total: totalRev },
-                variableCosts: { cleaning: varCleaning, repairs: varRepair, total: totalVarCosts },
-                grossProfit,
-                fixedCosts: { ...fixed, total: totalFixed },
-                netProfit
-            });
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    }
 
     if (loading || !data) return <div className="text-white">جاري الحساب...</div>;
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, query, where, getDocs, Timestamp, QuerySnapshot } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../firebase';
 import { Dress, InventoryItem, Reservation } from '../types';
 import { Calendar, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
   dress: Dress;
@@ -18,29 +18,48 @@ export function AvailabilityChecker({ dress }: Props) {
 
   const checkAvailability = async () => {
     if (!startDate || !endDate) return;
+    
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Basic validation: ensure end date is not before start date
+    if (start > end) {
+      alert('End date cannot be before start date.');
+      return;
+    }
+
     setChecking(true);
     setHasChecked(false);
 
     try {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      
-      // 1. Get all physical items for this dress
+      // 1. Get all physical items for this dress that are 'available'
       const itemsRef = collection(db, 'inventory_items');
       const itemsQuery = query(itemsRef, where('dressId', '==', dress.id), where('status', '==', 'available'));
       const itemsSnap = await getDocs(itemsQuery);
       const allItems = itemsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as InventoryItem));
 
-      // 2. Get all reservations that overlap with the requested period
-      // Overlap logic: (requestedStart <= existingBufferEnd) AND (requestedEnd >= existingStart)
+      // If no items are available, no need to check reservations
+      if (allItems.length === 0) {
+        setAvailableItems([]);
+        setHasChecked(true);
+        setChecking(false);
+        return;
+      }
+
+      // 2. Get all reservations for this dress that *could* overlap
+      // This query is more complex due to Firestore limitations on range queries for different fields.
+      // We fetch reservations that start before or during the requested end date
+      // AND end after or during the requested start date.
       const reservationsRef = collection(db, 'reservations');
       const reservationsQuery = query(
         reservationsRef,
         where('dressId', '==', dress.id),
-        where('status', '==', 'confirmed')
+        where('status', '==', 'confirmed'),
+        where('startDate', '<=', Timestamp.fromDate(end)),
+        where('bufferEndDate', '>=', Timestamp.fromDate(start))
       );
-      const reservationsSnap = await getDocs(reservationsQuery);
-      const overlappingReservations = reservationsSnap.docs.map(doc => doc.data() as Reservation);
+      const reservationsSnap: QuerySnapshot<Reservation> = await getDocs(reservationsQuery) as QuerySnapshot<Reservation>;
+      const overlappingReservations = reservationsSnap.docs.map(doc => doc.data());
 
       // Filter out items that have an overlapping reservation
       const available = allItems.filter(item => {
@@ -48,6 +67,7 @@ export function AvailabilityChecker({ dress }: Props) {
         return !itemReservations.some(res => {
           const resStart = res.startDate.toDate();
           const resBufferEnd = res.bufferEndDate.toDate();
+          // Client-side check for actual overlap, as Firestore query is an approximation
           return start <= resBufferEnd && end >= resStart;
         });
       });

@@ -2,44 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { collection, onSnapshot, query, orderBy, addDoc, Timestamp, doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db, login, logout, handleFirestoreError, OperationType } from './firebase';
-import { Dress, InventoryItem, UserProfile } from './types';
+import { Dress, UserProfile } from './types';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { DressCard } from './components/DressCard';
-import { 
-  Plus, 
-  LogOut, 
-  Search, 
-  LayoutDashboard, 
-  Package, 
-  CalendarCheck, 
+import {
+  Plus,
+  LogOut,
+  Search,
+  LayoutDashboard,
+  Package,
+  CalendarCheck,
   Settings,
   Sparkles,
   Loader2,
   User as UserIcon
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion'; // Changed from 'motion/react' to 'framer-motion'
+import { BrowserRouter as Router, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom';
 
-export default function App() {
+// Import Admin and Staff Dashboards
+import AdminDashboard from './components/admin/AdminDashboard';
+import StaffDashboard from './components/staff/StaffDashboard';
+import IncomeStatement from './components/admin/IncomeStatement';
+
+// Helper for conditional class names (assuming it's in utils.ts)
+import { cn } from './lib/utils';
+
+function MainAppContent() {
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [dresses, setDresses] = useState<Dress[]>([]);
-  const [activeTab, setActiveTab] = useState<'inventory' | 'reservations' | 'admin'>('inventory');
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddingDress, setIsAddingDress] = useState(false);
+
+  const location = useLocation();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       if (u) {
-        // Check/Create user profile
         const userRef = doc(db, 'users', u.uid);
         const userSnap = await getDoc(userRef);
         if (!userSnap.exists()) {
+          // Default role to 'staff' for new users
           const profile: UserProfile = {
             uid: u.uid,
             email: u.email || '',
-            role: u.email === 'ahmedbackerjr@gmail.com' ? 'admin' : 'staff',
+            role: 'staff', // Default role
             displayName: u.displayName || 'Staff Member'
           };
           await setDoc(userRef, profile);
@@ -81,7 +91,6 @@ export default function App() {
           imageUrl: `https://picsum.photos/seed/${d.name}/800/1000`
         });
 
-        // Add some inventory items for each dress
         const sizes = ['S', 'M', 'L'];
         for (const size of sizes) {
           await addDoc(collection(db, 'inventory_items'), {
@@ -126,8 +135,8 @@ export default function App() {
     );
   }
 
-  const filteredDresses = dresses.filter(d => 
-    d.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredDresses = dresses.filter(d =>
+    d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     d.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -142,28 +151,49 @@ export default function App() {
           </div>
 
           <nav className="flex-1 space-y-2">
-            <button 
-              onClick={() => setActiveTab('inventory')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'inventory' ? 'bg-stone-900 text-white shadow-lg shadow-stone-900/20' : 'text-stone-600 hover:bg-stone-50'}`}
+            <Link
+              to="/inventory"
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all",
+                location.pathname === '/inventory' ? 'bg-stone-900 text-white shadow-lg shadow-stone-900/20' : 'text-stone-600 hover:bg-stone-50'
+              )}
             >
               <Package className="w-5 h-5" />
               <span className="font-medium">Inventory</span>
-            </button>
-            <button 
-              onClick={() => setActiveTab('reservations')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'reservations' ? 'bg-stone-900 text-white shadow-lg shadow-stone-900/20' : 'text-stone-600 hover:bg-stone-50'}`}
+            </Link>
+            <Link
+              to="/reservations"
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all",
+                location.pathname === '/reservations' ? 'bg-stone-900 text-white shadow-lg shadow-stone-900/20' : 'text-stone-600 hover:bg-stone-50'
+              )}
             >
               <CalendarCheck className="w-5 h-5" />
               <span className="font-medium">Reservations</span>
-            </button>
+            </Link>
             {userProfile?.role === 'admin' && (
-              <button 
-                onClick={() => setActiveTab('admin')}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'admin' ? 'bg-stone-900 text-white shadow-lg shadow-stone-900/20' : 'text-stone-600 hover:bg-stone-50'}`}
+              <Link
+                to="/admin"
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all",
+                  location.pathname.startsWith('/admin') ? 'bg-stone-900 text-white shadow-lg shadow-stone-900/20' : 'text-stone-600 hover:bg-stone-50'
+                )}
               >
                 <Settings className="w-5 h-5" />
                 <span className="font-medium">Admin</span>
-              </button>
+              </Link>
+            )}
+            {userProfile?.role === 'staff' && (
+              <Link
+                to="/staff"
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all",
+                  location.pathname.startsWith('/staff') ? 'bg-stone-900 text-white shadow-lg shadow-stone-900/20' : 'text-stone-600 hover:bg-stone-50'
+                )}
+              >
+                <LayoutDashboard className="w-5 h-5" />
+                <span className="font-medium">Staff Dashboard</span>
+              </Link>
             )}
           </nav>
 
@@ -186,46 +216,42 @@ export default function App() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto p-4 md:p-10">
-          <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-            <div>
-              <h1 className="text-4xl serif font-medium text-stone-900 capitalize">{activeTab}</h1>
-              <p className="text-stone-500 text-sm">Manage your boutique's {activeTab} seamlessly.</p>
-            </div>
-
-            {activeTab === 'inventory' && (
-              <div className="flex items-center gap-4">
-                <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-stone-900 transition-colors" />
-                  <input 
-                    type="text" 
-                    placeholder="Search dresses..." 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 pr-4 py-2 bg-white border border-stone-200 rounded-full text-sm outline-none focus:ring-2 focus:ring-stone-900/5 focus:border-stone-900 transition-all w-full md:w-64"
-                  />
-                </div>
-                {userProfile?.role === 'admin' && (
-                  <button 
-                    onClick={() => setIsAddingDress(true)}
-                    className="luxury-button flex items-center gap-2 whitespace-nowrap"
-                  >
-                    <Plus className="w-4 h-4" />
-                    New Design
-                  </button>
-                )}
-              </div>
-            )}
-          </header>
-
-          <AnimatePresence mode="wait">
-            {activeTab === 'inventory' && (
-              <motion.div 
+          <Routes>
+            <Route path="/inventory" element={
+              <motion.div
                 key="inventory"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="grid grid-cols-1 xl:grid-cols-2 gap-8"
               >
+                <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 col-span-full">
+                  <div>
+                    <h1 className="text-4xl serif font-medium text-stone-900 capitalize">Inventory</h1>
+                    <p className="text-stone-500 text-sm">Manage your boutique's inventory seamlessly.</p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="relative group">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 group-focus-within:text-stone-900 transition-colors" />
+                      <input
+                        type="text"
+                        placeholder="Search dresses..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10 pr-4 py-2 bg-white border border-stone-200 rounded-full text-sm outline-none focus:ring-2 focus:ring-stone-900/5 focus:border-stone-900 transition-all w-full md:w-64"
+                      />
+                    </div>
+                    {userProfile?.role === 'admin' && (
+                      <button
+                        onClick={() => setIsAddingDress(true)}
+                        className="luxury-button flex items-center gap-2 whitespace-nowrap"
+                      >
+                        <Plus className="w-4 h-4" />
+                        New Design
+                      </button>
+                    )}
+                  </div>
+                </header>
                 {filteredDresses.length > 0 ? (
                   filteredDresses.map(dress => (
                     <DressCard key={dress.id} dress={dress} />
@@ -248,10 +274,9 @@ export default function App() {
                   </div>
                 )}
               </motion.div>
-            )}
-
-            {activeTab === 'reservations' && (
-              <motion.div 
+            } />
+            <Route path="/reservations" element={
+              <motion.div
                 key="reservations"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -264,46 +289,39 @@ export default function App() {
                   This section will list all active and past bookings. Use the inventory tab to check availability and create new reservations.
                 </p>
               </motion.div>
+            } />
+            {userProfile?.role === 'admin' && (
+              <Route path="/admin/*" element={<AdminDashboard />}>
+                <Route path="income" element={<IncomeStatement />} />
+                {/* Add other admin routes here */}
+              </Route>
             )}
-
-            {activeTab === 'admin' && (
-              <motion.div 
-                key="admin"
+            {userProfile?.role === 'staff' && (
+              <Route path="/staff" element={<StaffDashboard />} />
+            )}
+            <Route path="*" element={<motion.div
+                key="not-found"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
+                className="luxury-card p-12 text-center"
               >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="luxury-card p-6 border-l-4 border-l-stone-900">
-                    <p className="text-xs uppercase tracking-widest text-stone-400 font-bold mb-1">Total Designs</p>
-                    <p className="text-3xl font-serif">{dresses.length}</p>
-                  </div>
-                  <div className="luxury-card p-6 border-l-4 border-l-stone-900">
-                    <p className="text-xs uppercase tracking-widest text-stone-400 font-bold mb-1">Active Staff</p>
-                    <p className="text-3xl font-serif">1</p>
-                  </div>
-                  <div className="luxury-card p-6 border-l-4 border-l-stone-900">
-                    <p className="text-xs uppercase tracking-widest text-stone-400 font-bold mb-1">System Status</p>
-                    <p className="text-3xl font-serif text-emerald-600">Active</p>
-                  </div>
-                </div>
-                
-                <div className="luxury-card p-8">
-                  <h3 className="text-xl serif mb-6">Quick Actions</h3>
-                  <div className="flex flex-wrap gap-4">
-                    <button onClick={seedData} className="luxury-button flex items-center gap-2">
-                      <Sparkles className="w-4 h-4" />
-                      Re-seed Sample Data
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <h3 className="text-xl serif text-stone-900 mb-2">Page Not Found</h3>
+                <p className="text-stone-500 max-w-md mx-auto">
+                  The page you are looking for does not exist.
+                </p>
+              </motion.div>} />
+          </Routes>
         </main>
       </div>
     </ErrorBoundary>
   );
 }
 
+export default function App() {
+  return (
+    <Router>
+      <MainAppContent />
+    </Router>
+  );
+}

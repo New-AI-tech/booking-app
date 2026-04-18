@@ -1,49 +1,27 @@
-// src/components/staff/StaffDashboard.tsx
-// Updated Staff Dashboard including Invoice Trigger & Financial Tracking
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase.ts';
 import { Calendar, User, Clock, CheckCircle2, FileText } from 'lucide-react';
 import InvoiceGenerator from './InvoiceGenerator';
+import { fetchRecentBookings } from '../../firebase-services/bookingService';
+import { Reservation, Dress } from '../../types';
+
+interface BookingWithDress extends Reservation {
+  dress?: Dress;
+}
 
 export default function StaffDashboard() {
-    const [bookings, setBookings] = useState<any[]>([]);
+    const [bookings, setBookings] = useState<BookingWithDress[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedInvoice, setSelectedInvoice] = useState<any | null>(null);
+    const [selectedInvoice, setSelectedInvoice] = useState<BookingWithDress | null>(null);
 
     useEffect(() => {
-        fetchRecentBookings();
-    }, []);
-
-    async function fetchRecentBookings() {
-        try {
-            const { data, error } = await supabase
-                .from('bookings')
-                .select(`
-          id,
-          transaction_id,
-          customer_name,
-          customer_phone,
-          start_date,
-          due_date,
-          actual_return_date,
-          base_rental_fee,
-          delay_fee,
-          total_due,
-          amount_paid,
-          status,
-          dresses (id, name, price)
-        `)
-                .order('created_at', { ascending: false })
-                .limit(10);
-
-            if (error) throw error;
-            setBookings(data || []);
-        } catch (error) {
-            console.error('Error fetching dashboard data:', error);
-        } finally {
+        const loadBookings = async () => {
+            setLoading(true);
+            const fetchedBookings = await fetchRecentBookings();
+            setBookings(fetchedBookings as BookingWithDress[]);
             setLoading(false);
-        }
-    }
+        };
+        loadBookings();
+    }, []);
 
     return (
         <div className="max-w-7xl mx-auto px-6 py-12 space-y-12" dir="rtl">
@@ -81,29 +59,29 @@ export default function StaffDashboard() {
                                     {bookings.map((booking) => (
                                         <tr key={booking.id} className="group hover:bg-white/5 transition-colors">
                                             <td className="py-6">
-                                                <p className="text-sm font-bold text-gold tracking-tight">{booking.transaction_id || 'N/A'}</p>
-                                                <p className="text-xs text-stone-400 mt-1">{booking.dresses?.name}</p>
+                                                <p className="text-sm font-bold text-gold tracking-tight">{booking.id.substring(0, 8)}</p>
+                                                <p className="text-xs text-stone-400 mt-1">{booking.dress?.name}</p>
                                             </td>
                                             <td className="py-6">
                                                 <div className="flex flex-col gap-1 text-stone-300">
-                                                    <span className="text-sm font-bold">{booking.customer_name}</span>
-                                                    <span className="text-xs text-stone-500">{booking.customer_phone || '---'}</span>
+                                                    <span className="text-sm font-bold">{booking.customerName}</span>
+                                                    <span className="text-xs text-stone-500">{booking.customerEmail || '---'}</span>
                                                 </div>
                                             </td>
                                             <td className="py-6">
                                                 <div className="flex items-center gap-2 text-stone-400">
                                                     <Calendar className="w-3 h-3" />
                                                     <span className="text-xs">
-                                                        {new Date(booking.start_date).toLocaleDateString('ar-EG')} → {new Date(booking.due_date || booking.start_date).toLocaleDateString('ar-EG')}
+                                                        {booking.startDate.toDate().toLocaleDateString('ar-EG')} → {booking.endDate.toDate().toLocaleDateString('ar-EG')}
                                                     </span>
                                                 </div>
                                             </td>
                                             <td className="py-6">
                                                 <div className="text-xs space-y-1">
-                                                    <p className="text-stone-300">المستحق: <span className="font-bold">{booking.total_due} EGP</span></p>
-                                                    <p className="text-green-500">المدفوع: <span className="font-bold">{booking.amount_paid} EGP</span></p>
-                                                    {(booking.total_due - booking.amount_paid) > 0 && (
-                                                        <p className="text-red-400">المتبقي: <span className="font-bold">{booking.total_due - booking.amount_paid} EGP</span></p>
+                                                    <p className="text-stone-300">المستحق: <span className="font-bold">{booking.totalPrice} EGP</span></p>
+                                                    <p className="text-green-500">المدفوع: <span className="font-bold">{booking.totalPrice} EGP</span></p>
+                                                    {(booking.totalPrice - booking.totalPrice) > 0 && (
+                                                        <p className="text-red-400">المتبقي: <span className="font-bold">{booking.totalPrice - booking.totalPrice} EGP</span></p>
                                                     )}
                                                 </div>
                                             </td>

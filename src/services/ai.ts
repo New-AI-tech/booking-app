@@ -9,6 +9,8 @@ export const AIService = {
         try {
             if (signal?.aborted) throw new Error('Request aborted');
 
+            // The @google/generative-ai SDK does not directly support AbortSignal in generateContent
+            // We handle it manually at the start of the function.
             const result = await model.generateContent(prompt);
             const response = await result.response;
             return response.text();
