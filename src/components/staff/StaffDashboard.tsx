@@ -68,7 +68,7 @@ export default function StaffDashboard() {
                                                 <div className="flex items-center gap-2 text-stone-400">
                                                     <Calendar className="w-3 h-3" />
                                                     <span className="text-xs">
-                                                        {booking.startDate.toDate().toLocaleDateString('ar-EG')} → {booking.endDate.toDate().toLocaleDateString('ar-EG')}
+                                                        {booking.startDate.toLocaleDateString('ar-EG')} → {booking.endDate.toLocaleDateString('ar-EG')}
                                                     </span>
                                                 </div>
                                             </td>
