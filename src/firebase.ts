@@ -10,3 +10,10 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+
+export type OperationType = 'create' | 'read' | 'update' | 'delete' | 'list';
+
+export function handleFirestoreError(operation: OperationType, error: any): never {
+  console.error(`Firestore Error during ${operation}:`, error);
+  throw new Error(`Failed to ${operation}: ${error?.message || 'Unknown error'}`);
+}

@@ -21,3 +21,26 @@ export interface IncomeRecord {
   date: string;
   description: string;
 }
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  description?: string;
+  purchaseCost?: number;
+  targetROI?: number;
+  rentalPrice?: number;
+  status: 'Available' | 'Rented' | 'In Maintenance' | string;
+  image?: string;
+}
+
+export interface Reservation {
+  id: string;
+  dressId: string;
+  clientId?: string;
+  customerName?: string;
+  outDate: Date | string;
+  returnDate: Date | string;
+  rentalFee: number;
+  depositAmount: number;
+  status: 'Pending' | 'Active' | 'Returned' | 'Late' | string;
+}
