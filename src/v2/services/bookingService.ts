@@ -1,19 +1,31 @@
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { collection, query, orderBy, limit, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase-bridge';
-import { BookingWithDress } from '../types'; // This looks at src/v2/types.ts
+import { BookingWithDress, Dress, Reservation } from '../types';
 
-export const fetchRecentBookings = async (): Promise<BookingWithDress[]> => {
-  try {
-    const q = query(collection(db, 'reservations'), orderBy('outDate', 'desc'), limit(10));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ 
-      id: doc.id, 
-      ...doc.data(),
-      customerName: doc.data().customerName || 'Unknown Customer',
-      status: doc.data().status || 'Pending'
-    } as BookingWithDress));
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return [];
-  }
+export const bookingService = {
+    async fetchRecentBookings(): Promise<BookingWithDress[]> {
+        try {
+            const q = query(collection(db, 'reservations'), orderBy('startDate', 'desc'), limit(15));
+            const snapshot = await getDocs(q);
+
+            const bookings = await Promise.all(snapshot.docs.map(async (docSnap) => {
+                const data = docSnap.data() as Reservation;
+                // Parallel fetch for dress details
+                const dressRef = doc(db, 'dresses', data.dressId);
+                const dressSnap = await getDoc(dressRef);
+                const dress = dressSnap.exists() ? { id: dressSnap.id, ...dressSnap.data() } as Dress : undefined;
+
+                return {
+                    id: docSnap.id,
+                    ...data,
+                    dress
+                };
+            }));
+
+            return bookings;
+        } catch (error) {
+            console.error("Booking Fetch Error:", error);
+            return [];
+        }
+    }
 };
