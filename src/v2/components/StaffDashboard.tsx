@@ -45,7 +45,7 @@ export function StaffDashboard() {
                     <td className="px-8 py-5 font-semibold text-gray-800">{b.customerName}</td>
                     <td className="px-8 py-5">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium border ${
-                        b.status === 'Active' 
+                        b.status === 'active' 
                           ? 'bg-green-50 text-green-700 border-green-100' 
                           : 'bg-orange-50 text-orange-700 border-orange-100'
                       }`}>
@@ -53,7 +53,7 @@ export function StaffDashboard() {
                       </span>
                     </td>
                     <td className="px-8 py-5 text-gray-400 text-sm font-mono">
-                      {b.outDate?.seconds ? new Date(b.outDate.seconds * 1000).toLocaleDateString() : 'N/A'}
+                      {b.startDate?.seconds ? new Date(b.startDate.seconds * 1000).toLocaleDateString() : 'N/A'}
                     </td>
                   </tr>
                 ))
