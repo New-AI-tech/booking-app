@@ -57,8 +57,8 @@ export default function AvailabilityChecker({ dress }: Props) {
       const available = allItems.filter(item => {
         const itemReservations = overlappingReservations.filter(res => res.itemId === item.id);
         return !itemReservations.some(res => {
-          const resStart = res.startDate.toDate ? res.startDate.toDate() : new Date(res.startDate);
-          const resBufferEnd = res.bufferEndDate.toDate ? res.bufferEndDate.toDate() : new Date(res.bufferEndDate);
+          const resStart = res.startDate.toDate();
+          const resBufferEnd = res.bufferEndDate.toDate();
           return start <= resBufferEnd && end >= resStart;
         });
       });
