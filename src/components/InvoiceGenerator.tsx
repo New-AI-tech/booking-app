@@ -1,5 +1,4 @@
 // src/components/staff/InvoiceGenerator.tsx
-import React from 'react';
 import { X, Printer, Download, Mail, Phone, MapPin } from 'lucide-react';
 
 interface InvoiceGeneratorProps {
@@ -19,13 +18,13 @@ export default function InvoiceGenerator({ booking, onClose }: InvoiceGeneratorP
                 <div className="flex justify-between items-center p-6 border-b border-stone-100 bg-stone-50">
                     <h2 className="text-xl font-serif text-stone-900">معاينة الفاتورة</h2>
                     <div className="flex gap-4">
-                        <button 
+                        <button
                             onClick={handlePrint}
                             className="flex items-center gap-2 bg-stone-900 text-white px-4 py-2 hover:bg-stone-800 transition-colors text-sm rounded-sm"
                         >
                             <Printer className="w-4 h-4" /> طباعة
                         </button>
-                        <button 
+                        <button
                             onClick={onClose}
                             className="p-2 text-stone-400 hover:text-stone-900 transition-colors"
                         >
@@ -135,7 +134,8 @@ export default function InvoiceGenerator({ booking, onClose }: InvoiceGeneratorP
                 </div>
             </div>
 
-            <style dangerouslySetInnerHTML={{ __html: `
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 @media print {
                     body * { visibility: hidden; }
                     #printable-invoice, #printable-invoice * { visibility: visible; }

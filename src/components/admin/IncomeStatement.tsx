@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FileText, Download } from 'lucide-react';
 import { fetchIncomeData } from '../../services/incomeService';
 
 interface IncomeData {
-  revenue: { rental: number; delay: number; total: number; };
-  variableCosts: { cleaning: number; repairs: number; total: number; };
-  grossProfit: number;
-  fixedCosts: { rent: number; utilities: number; software_subs: number; insurance: number; salaries: number; marketing: number; total: number; };
-  netProfit: number;
+    revenue: { rental: number; delay: number; total: number; };
+    variableCosts: { cleaning: number; repairs: number; total: number; };
+    grossProfit: number;
+    fixedCosts: { rent: number; utilities: number; software_subs: number; insurance: number; salaries: number; marketing: number; total: number; };
+    netProfit: number;
 }
 
 export default function IncomeStatement() {
