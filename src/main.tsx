@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import AppMain from './bridge/AppMain'
+import AppEntry from './v2/AppEntry'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AppMain />
+    <AppEntry />
   </React.StrictMode>,
 )
