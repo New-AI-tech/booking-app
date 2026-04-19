@@ -1,67 +1,95 @@
 import React, { useEffect, useState } from 'react';
-import { fetchRecentBookings } from '../services/bookingService';
-import { BookingWithDress } from '../types'; // This looks at src/v2/types.ts
+import { bookingService } from '../services/bookingService';
+import { BookingWithDress } from '../types';
+import { Calendar, User } from 'lucide-react';
 
 export function StaffDashboard() {
-  const [bookings, setBookings] = useState<BookingWithDress[]>([]);
-  const [loading, setLoading] = useState(true);
+    const [bookings, setBookings] = useState<BookingWithDress[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchRecentBookings().then(data => {
-      setBookings(data);
-      setLoading(false);
-    });
-  }, []);
+    useEffect(() => {
+        bookingService.fetchRecentBookings().then(data => {
+            setBookings(data);
+            setLoading(false);
+        });
+    }, []);
 
-  if (loading) return <div className="p-10 text-center text-gray-500 italic">Loading reservations...</div>;
+    const getStatusStyle = (status: string) => {
+        const base = "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ";
+        switch (status) {
+            case 'active': return base + "bg-emerald-100 text-emerald-700 border border-emerald-200";
+            case 'confirmed': return base + "bg-blue-100 text-blue-700 border border-blue-200";
+            default: return base + "bg-stone-100 text-stone-600 border border-stone-200";
+        }
+    };
 
-  return (
-    <div className="p-8">
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 tracking-tight">Staff Portal</h1>
-        <div className="bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-md">
-          {bookings.length} Live Bookings
+    if (loading) return (
+        <div className="p-20 text-center animate-pulse text-stone-400 font-serif italic">
+            Loading live reservation data...
         </div>
-      </header>
+    );
 
-      <div className="bg-white shadow-2xl rounded-3xl overflow-hidden border border-gray-100">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50/50 border-b border-gray-100">
-              <tr>
-                <th className="px-8 py-5 text-xs font-bold text-gray-400 uppercase">Customer</th>
-                <th className="px-8 py-5 text-xs font-bold text-gray-400 uppercase">Status</th>
-                <th className="px-8 py-5 text-xs font-bold text-gray-400 uppercase">Date</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {bookings.length === 0 ? (
-                <tr>
-                  <td colSpan={3} className="px-8 py-10 text-center text-gray-400">No recent bookings found in Firestore.</td>
-                </tr>
-              ) : (
-                bookings.map((b) => (
-                  <tr key={b.id} className="group hover:bg-blue-50/40 transition-all duration-200">
-                    <td className="px-8 py-5 font-semibold text-gray-800">{b.customerName}</td>
-                    <td className="px-8 py-5">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium border ${
-                        b.status === 'active' 
-                          ? 'bg-green-50 text-green-700 border-green-100' 
-                          : 'bg-orange-50 text-orange-700 border-orange-100'
-                      }`}>
-                        {b.status}
-                      </span>
-                    </td>
-                    <td className="px-8 py-5 text-gray-400 text-sm font-mono">
-                      {b.startDate?.seconds ? new Date(b.startDate.seconds * 1000).toLocaleDateString() : 'N/A'}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+    return (
+        <div className="space-y-10">
+            <header className="flex justify-between items-end border-b border-stone-100 pb-6">
+                <div className="space-y-1">
+                    <h2 className="text-4xl font-serif font-medium text-stone-900 tracking-tight">Staff Portal</h2>
+                    <p className="text-stone-400 text-sm">Real-time oversight of current rentals and incoming bookings.</p>
+                </div>
+            </header>
+
+            <div className="bg-white rounded-[2.5rem] shadow-xl shadow-stone-200/50 overflow-hidden border border-stone-100">
+                <table className="w-full text-left border-collapse">
+                    <thead className="bg-stone-50/50 border-b border-stone-100">
+                        <tr>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest">Client / Contact</th>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest">Piece Details</th>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest">Rental Period</th>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-50">
+                        {bookings.length === 0 ? (
+                            <tr>
+                                <td colSpan={4} className="px-10 py-16 text-center text-stone-400 font-serif italic">
+                                    No active reservations found.
+                                </td>
+                            </tr>
+                        ) : bookings.map((booking) => (
+                            <tr key={booking.id} className="hover:bg-stone-50/40 transition-colors group">
+                                <td className="px-10 py-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center text-stone-400 group-hover:bg-stone-900 group-hover:text-white transition-all">
+                                            <User className="w-4 h-4" />
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-stone-900">{booking.customerName}</p>
+                                            <p className="text-xs text-stone-400">{booking.customerEmail}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="px-10 py-8">
+                                    <p className="font-medium text-stone-800">{booking.dress?.name || 'Standard Design'}</p>
+                                    <p className="text-[10px] text-stone-400 font-bold uppercase tracking-tighter">
+                                        SKU: {booking.id.substring(0, 8)}
+                                    </p>
+                                </td>
+                                <td className="px-10 py-8">
+                                    <div className="flex items-center gap-2 text-stone-600 text-sm">
+                                        <Calendar className="w-3.5 h-3.5" />
+                                        <span>{booking.startDate.toDate().toLocaleDateString()}</span>
+                                        <span className="text-stone-300">→</span>
+                                        <span>{booking.endDate.toDate().toLocaleDateString()}</span>
+                                    </div>
+                                </td>
+                                <td className="px-10 py-8 text-center">
+                                    <span className={getStatusStyle(booking.status)}>{booking.status}</span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
