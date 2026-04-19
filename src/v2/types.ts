@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export type UserRole = 'admin' | 'staff' | 'customer';
+export type UserRole = 'admin' | 'staff';
 
 export interface UserProfile {
   uid: string;
@@ -26,7 +26,7 @@ export interface InventoryItem {
   size: string;
   color?: string;
   sku?: string;
-  status: 'available' | 'rented' | 'maintenance' | 'retired';
+  status: 'available' | 'maintenance' | 'retired';
 }
 
 export interface Reservation {
@@ -39,10 +39,27 @@ export interface Reservation {
   endDate: Timestamp;
   bufferEndDate: Timestamp;
   totalPrice: number;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'active' | 'returned';
+  status: 'confirmed' | 'cancelled' | 'completed';
   createdAt?: Timestamp;
 }
 
 export interface BookingWithDress extends Reservation {
   dress?: Dress;
+}
+
+export interface MaintenanceLog {
+  id: string;
+  itemId: string;
+  cost: number;
+  description: string;
+  date: Timestamp;
+}
+
+export interface IncomeData {
+  revenue: number;
+  maintenanceCosts: number;
+  fixedCosts: number;
+  grossProfit: number;
+  netProfit: number;
+  bookingCount: number;
 }
