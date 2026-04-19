@@ -4,10 +4,11 @@ import { authService } from './services/authService';
 import { UserProfile } from './types';
 import { StaffDashboard } from './components/StaffDashboard';
 import InventoryList from './components/Inventory/InventoryList';
+import IncomeStatement from './components/IncomeStatement';
 import LoginPage from './components/Auth/LoginPage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { Package, LayoutDashboard, ShieldCheck, LogOut, Sparkles, Loader2 } from 'lucide-react';
+import { Package, LayoutDashboard, ShieldCheck, LogOut, Sparkles, Loader2, BarChart2 } from 'lucide-react';
 
 export default function AppEntry() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -49,9 +50,14 @@ export default function AppEntry() {
                                     <LayoutDashboard className="w-3 h-3" /> Dashboard
                                 </Link>
                                 {userProfile.role === 'admin' && (
-                                    <Link to="/admin" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
-                                        <ShieldCheck className="w-3 h-3" /> Admin
-                                    </Link>
+                                    <>
+                                        <Link to="/admin" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
+                                            <ShieldCheck className="w-3 h-3" /> Admin
+                                        </Link>
+                                        <Link to="/admin/income" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
+                                            <BarChart2 className="w-3 h-3" /> Income
+                                        </Link>
+                                    </>
                                 )}
                             </div>
                             <div className="flex items-center gap-4">
@@ -98,7 +104,13 @@ export default function AppEntry() {
 
                             <Route path="/inventory" element={
                                 <ProtectedRoute userProfile={userProfile} loading={loading}>
-                                    <InventoryList />
+                                    <InventoryList isAdmin={userProfile?.role === 'admin'} />
+                                </ProtectedRoute>
+                            } />
+
+                            <Route path="/admin/income" element={
+                                <ProtectedRoute userProfile={userProfile} loading={loading} requiredRole="admin">
+                                    <IncomeStatement />
                                 </ProtectedRoute>
                             } />
 
