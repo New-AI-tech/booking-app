@@ -1,2 +1,19 @@
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ENV } from './env';
-export const AIService = { generate: async () => "Fixed" };
+
+const genAI = new GoogleGenerativeAI(ENV.VITE_GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+export const AIService = {
+    async getStylingRecommendations(prompt: string, signal?: AbortSignal): Promise<string> {
+        try {
+            if (signal?.aborted) throw new Error('Request aborted');
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            return response.text();
+        } catch (error: any) {
+            console.error('AI Service Error:', error);
+            throw new Error(error.message || 'Failed to generate recommendations');
+        }
+    }
+};
