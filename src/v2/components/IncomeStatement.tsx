@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { incomeService } from '../../services/incomeService';
-import { IncomeData } from '../../types';
+import { incomeService } from '../services/incomeService';
+import { IncomeData } from '../types';
 import { TrendingUp, TrendingDown, DollarSign, Loader2, ChevronDown } from 'lucide-react';
 
 export default function IncomeStatement() {
