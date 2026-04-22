@@ -19,6 +19,8 @@ export interface InventoryItem extends Dress {
   purchaseCost?: number;
   targetROI?: number;
   size?: string; // Fixed: Added size
+  sku?: string;
+  notes?: string;
 }
 
 export interface Reservation {
