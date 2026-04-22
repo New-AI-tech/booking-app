@@ -93,7 +93,7 @@ export default function AvailabilityChecker({ dress }: Props) {
                 bufferEndDate: Timestamp.fromDate(bufferEnd),
                 totalPrice,
                 status: 'confirmed',
-            } as Omit<Reservation, 'id'>);
+            });
 
             setBookingSuccess(true);
             setSelectedItem(null);

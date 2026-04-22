@@ -25,16 +25,16 @@ export const bookingService = {
         }
     },
 
-    async createReservation(data: Omit<Reservation, 'id'>): Promise<string> {
-        try {
-            const docRef = await addDoc(collection(db, 'reservations'), {
-                ...data,
-                createdAt: Timestamp.now()
-            });
-            return docRef.id;
-        } catch (error) {
-            handleFirestoreError(OperationType.CREATE, error, 'reservations');
-        }
+    async createReservation(data: Omit<Reservation, 'id' | 'createdAt'>): Promise<string> {
+        const docRef = await addDoc(collection(db, 'reservations'), {
+            ...data,
+            // Ensure dates are always stored as Firestore Timestamps (not JS Dates)
+            startDate: data.startDate instanceof Date ? Timestamp.fromDate(data.startDate) : data.startDate,
+            endDate: data.endDate instanceof Date ? Timestamp.fromDate(data.endDate) : data.endDate,
+            bufferEndDate: data.bufferEndDate instanceof Date ? Timestamp.fromDate(data.bufferEndDate) : data.bufferEndDate,
+            createdAt: Timestamp.now(),
+        });
+        return docRef.id;
     },
 
     /** Check if a specific item is already booked during the proposed window (incl. buffer). */
