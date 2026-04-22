@@ -26,8 +26,12 @@ export const authService = {
 
   async ensureUserProfile(user: User, defaultRole: UserRole = 'staff'): Promise<UserProfile> {
     const existing = await this.getUserProfile(user.uid);
+    
+    // If the profile exists, return it exactly as is. 
+    // This prevents the 'staff' overwrite logic from ever running.
     if (existing) return existing;
 
+    // Only create a NEW document if we are 100% sure one doesn't exist
     const newProfile: UserProfile = {
       uid: user.uid,
       email: user.email || '',
