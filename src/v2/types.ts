@@ -26,6 +26,7 @@ export interface InventoryItem {
   size: string;
   color?: string;
   sku?: string;
+  notes?: string;
   status: 'available' | 'maintenance' | 'retired';
 }
 

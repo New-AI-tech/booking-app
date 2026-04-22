@@ -17,10 +17,12 @@ export const inventoryService = {
 
     async addDress(dress: Omit<Dress, 'id'>): Promise<string> {
         try {
-            const docRef = await addDoc(collection(db, 'dresses'), {
+            const data = {
                 ...dress,
                 createdAt: Timestamp.now()
-            });
+            };
+            const sanitizedData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== undefined));
+            const docRef = await addDoc(collection(db, 'dresses'), sanitizedData);
             return docRef.id;
         } catch (error) {
             handleFirestoreError(OperationType.CREATE, error, 'dresses');
@@ -47,7 +49,8 @@ export const inventoryService = {
 
     async addInventoryItem(item: Omit<InventoryItem, 'id'>): Promise<string> {
         try {
-            const docRef = await addDoc(collection(db, 'inventory_items'), item);
+            const sanitizedData = Object.fromEntries(Object.entries(item).filter(([_, v]) => v !== undefined));
+            const docRef = await addDoc(collection(db, 'inventory_items'), sanitizedData);
             return docRef.id;
         } catch (error) {
             handleFirestoreError(OperationType.CREATE, error, 'inventory_items');

@@ -20,27 +20,37 @@ export const authService = {
       return null;
     } catch (error) {
       console.error('Error fetching user profile:', error);
-      return null;
+      throw error;
     }
   },
 
   async ensureUserProfile(user: User, defaultRole: UserRole = 'staff'): Promise<UserProfile> {
-    const existing = await this.getUserProfile(user.uid);
-    
-    // If the profile exists, return it exactly as is. 
-    // This prevents the 'staff' overwrite logic from ever running.
-    if (existing) return existing;
+    try {
+      const existing = await this.getUserProfile(user.uid);
+      
+      // If the profile exists, return it exactly as is. 
+      // This prevents the 'staff' overwrite logic from ever running.
+      if (existing) return existing;
 
-    // Only create a NEW document if we are 100% sure one doesn't exist
-    const newProfile: UserProfile = {
-      uid: user.uid,
-      email: user.email || '',
-      role: defaultRole,
-      displayName: user.displayName || 'Team Member'
-    };
+      // Only create a NEW document if we are 100% sure one doesn't exist
+      const newProfile: UserProfile = {
+        uid: user.uid,
+        email: user.email || '',
+        role: defaultRole,
+        displayName: user.displayName || 'Team Member'
+      };
 
-    await setDoc(doc(db, 'users', user.uid), newProfile);
-    return newProfile;
+      await setDoc(doc(db, 'users', user.uid), newProfile);
+      return newProfile;
+    } catch (error) {
+      console.warn('Client is offline, aborting overwrite and returning local auth state.', error);
+      return {
+        uid: user.uid,
+        email: user.email || '',
+        role: defaultRole,
+        displayName: user.displayName || 'Team Member'
+      };
+    }
   },
 
   onAuthStateChange(callback: (user: User | null) => void) {
