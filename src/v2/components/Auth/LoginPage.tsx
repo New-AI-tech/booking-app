@@ -29,7 +29,7 @@ export default function LoginPage() {
                     <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-xl mb-2">
                         <Sparkles className="w-6 h-6 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold tracking-tight">ڤوج رينت</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">آتليه فريال الحصري</h1>
                     <p className="text-stone-400 text-xs font-bold uppercase tracking-[0.2em]">بوابة الإدارة</p>
                 </div>
                 
