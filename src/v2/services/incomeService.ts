@@ -13,8 +13,8 @@ const FIXED_COSTS = {
 };
 const TOTAL_FIXED = Object.values(FIXED_COSTS).reduce((a, b) => a + b, 0);
 
-export const incomeService = {
-    async fetchIncomeData(month: number, year: number): Promise<IncomeData> {
+
+export async function fetchIncomeData(month: number, year: number): Promise<IncomeData> {
         const startOfMonth = new Date(year, month - 1, 1);
         const endOfMonth = new Date(year, month, 0, 23, 59, 59);
 
@@ -55,4 +55,5 @@ export const incomeService = {
             bookingCount: reservations.length,
         };
     }
-};
+
+export const incomeService = { fetchIncomeData };

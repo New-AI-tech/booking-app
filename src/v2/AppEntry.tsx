@@ -67,8 +67,8 @@ export default function AppEntry() {
                                         <Link to="/admin" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
                                             <ShieldCheck className="w-3 h-3" /> Admin
                                         </Link>
-                                        <Link to="/admin/income" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
-                                            <BarChart2 className="w-3 h-3" /> Income
+                                        <Link to="/income" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
+                                            <BarChart2 className="w-3 h-3" /> كشف الدخل
                                         </Link>
                                     </>
                                 )}
@@ -121,7 +121,7 @@ export default function AppEntry() {
                                 </ProtectedRoute>
                             } />
 
-                            <Route path="/admin/income" element={
+                            <Route path="/income" element={
                                 <ProtectedRoute userProfile={userProfile} loading={loading} requiredRole="admin">
                                     <IncomeStatement />
                                 </ProtectedRoute>
