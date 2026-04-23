@@ -1,34 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
 
-@theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
 }
 
-@layer base {
-  body {
-    @apply bg-[#f5f2ed] text-[#1a1a1a] font-sans antialiased;
-  }
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.serif {
-  @apply font-serif;
+/* RTL Helpers */
+[dir="rtl"] .ltr-only {
+  display: none;
 }
 
-.luxury-card {
-  @apply bg-white rounded-2xl shadow-sm border border-stone-200/60 transition-all duration-300 hover:shadow-md;
+[dir="ltr"] .rtl-only {
+  display: none;
 }
 
-.luxury-input {
-  @apply bg-stone-50 border border-stone-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-stone-900/10 focus:border-stone-900 outline-none transition-all;
+/* Custom transitions */
+.animate-in {
+  animation-duration: 500ms;
+  animation-fill-mode: both;
 }
 
-.luxury-button {
-  @apply px-6 py-2 bg-stone-900 text-white rounded-full hover:bg-stone-800 active:scale-95 transition-all disabled:opacity-50 disabled:pointer-events-none;
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.luxury-button-outline {
-  @apply px-6 py-2 border border-stone-900 text-stone-900 rounded-full hover:bg-stone-50 active:scale-95 transition-all;
+@keyframes zoom-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
+.fade-in { animation-name: fade-in; }
+.zoom-in { animation-name: zoom-in; }

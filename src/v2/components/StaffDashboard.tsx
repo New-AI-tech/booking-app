@@ -23,36 +23,46 @@ export function StaffDashboard() {
         }
     };
 
+    const translateStatus = (status: string) => {
+        switch (status) {
+            case 'active': return 'نشط';
+            case 'confirmed': return 'مؤكد';
+            case 'completed': return 'مكتمل';
+            case 'cancelled': return 'ملغي';
+            default: return status;
+        }
+    };
+
     if (loading) return (
-        <div className="p-20 text-center animate-pulse text-stone-400 font-serif italic">
-            Loading live reservation data...
+        <div className="p-20 text-center animate-pulse text-stone-400 font-serif italic" dir="rtl">
+            جاري تحميل بيانات الحجوزات المباشرة...
         </div>
     );
 
     return (
-        <div className="space-y-10">
-            <header className="flex justify-between items-end border-b border-stone-100 pb-6">
+        <div className="space-y-10" dir="rtl">
+            <header className="flex justify-between items-end border-b border-stone-100 pb-6 text-right">
                 <div className="space-y-1">
-                    <h2 className="text-4xl font-serif font-medium text-stone-900 tracking-tight">Staff Portal</h2>
-                    <p className="text-stone-400 text-sm">Real-time oversight of current rentals and incoming bookings.</p>
+                    <h2 className="text-4xl font-serif font-medium text-stone-900 tracking-tight">بوابة الموظفين</h2>
+                    <p className="text-stone-400 text-sm">رقابة فورية على الإيجارات الحالية والحجوزات القادمة.</p>
                 </div>
             </header>
 
             <div className="bg-white rounded-[2.5rem] shadow-xl shadow-stone-200/50 overflow-hidden border border-stone-100">
-                <table className="w-full text-left border-collapse">
+                <table className="w-full text-right border-collapse">
                     <thead className="bg-stone-50/50 border-b border-stone-100">
                         <tr>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest">Client / Contact</th>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest">Piece Details</th>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest">Rental Period</th>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center">Status</th>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-right">العميل / الاتصال</th>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-right">تفاصيل القطعة</th>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-right">فترة الإيجار</th>
+                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center">الحالة</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-stone-50">
                         {bookings.length === 0 ? (
                             <tr>
                                 <td colSpan={4} className="px-10 py-16 text-center text-stone-400 font-serif italic">
-                                    No active reservations found.
+                                    لا توجد حجوزات نشطة حالياً.
                                 </td>
                             </tr>
                         ) : bookings.map((booking) => (
@@ -69,21 +79,21 @@ export function StaffDashboard() {
                                     </div>
                                 </td>
                                 <td className="px-10 py-8">
-                                    <p className="font-medium text-stone-800">{booking.dress?.name || 'Standard Design'}</p>
+                                    <p className="font-medium text-stone-800">{booking.dress?.name || 'تصميم قياسي'}</p>
                                     <p className="text-[10px] text-stone-400 font-bold uppercase tracking-tighter">
-                                        SKU: {booking.id.substring(0, 8)}
+                                        رمز: {booking.id.substring(0, 8)}
                                     </p>
                                 </td>
                                 <td className="px-10 py-8">
                                     <div className="flex items-center gap-2 text-stone-600 text-sm">
                                         <Calendar className="w-3.5 h-3.5" />
-                                        <span>{booking.startDate.toDate().toLocaleDateString()}</span>
-                                        <span className="text-stone-300">→</span>
-                                        <span>{booking.endDate.toDate().toLocaleDateString()}</span>
+                                        <span>{booking.startDate.toDate().toLocaleDateString('ar-EG')}</span>
+                                        <span className="text-stone-300">←</span>
+                                        <span>{booking.endDate.toDate().toLocaleDateString('ar-EG')}</span>
                                     </div>
                                 </td>
                                 <td className="px-10 py-8 text-center">
-                                    <span className={getStatusStyle(booking.status)}>{booking.status}</span>
+                                    <span className={getStatusStyle(booking.status)}>{translateStatus(booking.status)}</span>
                                 </td>
                             </tr>
                         ))}
