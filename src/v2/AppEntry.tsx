@@ -95,22 +95,34 @@ export default function AppEntry() {
 
                             <Route path="/" element={
                                 <ProtectedRoute userProfile={userProfile} loading={loading}>
-                                    <div className="py-24 text-center space-y-8 animate-in">
-                                        <div className="inline-block bg-white p-6 rounded-2xl border border-stone-200 shadow-sm mb-4">
-                                            <Sparkles className="w-12 h-12 text-stone-900" />
+                                    <div className="relative -mx-6 -mt-8 h-[calc(100vh-80px)] min-h-[600px] flex items-center justify-center overflow-hidden">
+                                        {/* Hero Background with Overlay */}
+                                        <div 
+                                            className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
+                                            style={{ backgroundImage: "url('/hero-bg.jpg')" }}
+                                        />
+                                        <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+                                        
+                                        {/* Hero Content */}
+                                        <div className="relative z-10 text-center space-y-8 px-6 animate-in">
+                                            <div className="inline-block bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl mb-4">
+                                                <Sparkles className="w-12 h-12 text-white" />
+                                            </div>
+                                            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-tight">
+                                                أهلاً بك في <br/>
+                                                <span className="text-stone-300">آتليه فريال الحصري</span>
+                                            </h1>
+                                            <p className="text-lg md:text-xl text-stone-300 max-w-2xl mx-auto font-medium leading-relaxed">
+                                                حيث تجتمع الفخامة مع الإبداع في كل تصميم. <br/>
+                                                إدارة المجموعة الأكثر تميزاً لفساتين السهرة.
+                                            </p>
+                                            <Link
+                                                to="/inventory"
+                                                className="inline-block mt-8 px-12 py-5 bg-white text-stone-900 rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-stone-100 transition-all shadow-2xl hover:scale-105"
+                                            >
+                                                دخول المجموعة
+                                            </Link>
                                         </div>
-                                        <h1 className="text-5xl font-bold text-stone-900 tracking-tight">
-                                            أهلاً بك في آتليه فريال الحصري
-                                        </h1>
-                                        <p className="text-lg text-stone-500 max-w-lg mx-auto">
-                                            إدارة المجموعة الأكثر تميزاً لفساتين السهرة في مكان واحد.
-                                        </p>
-                                        <Link
-                                            to="/inventory"
-                                            className="inline-block mt-4 px-12 py-4 bg-stone-900 text-white rounded-xl font-bold text-sm uppercase tracking-widest hover:bg-stone-800 transition-all shadow-lg"
-                                        >
-                                            دخول المجموعة
-                                        </Link>
                                     </div>
                                 </ProtectedRoute>
                             } />
