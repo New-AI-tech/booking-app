@@ -15,8 +15,20 @@ export default function IncomeStatement() {
         setLoading(true);
         setError('');
         fetchIncomeData(month, year)
-            .then(setData)
-            .catch(() => setError('فشل في تحميل البيانات المالية.'))
+            .then((res) => {
+                setData(res || {
+                    revenue: 0,
+                    maintenanceCosts: 0,
+                    fixedCosts: 7850, // This should ideally match TOTAL_FIXED in the service
+                    grossProfit: 0,
+                    netProfit: -7850,
+                    bookingCount: 0
+                });
+            })
+            .catch((err) => {
+                console.error('Financial data fetch error:', err);
+                setError('فشل في تحميل البيانات المالية.');
+            })
             .finally(() => setLoading(false));
     }, [month, year]);
 
