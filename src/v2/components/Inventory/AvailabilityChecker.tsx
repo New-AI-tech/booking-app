@@ -107,57 +107,57 @@ export default function AvailabilityChecker({ dress }: Props) {
     const availableSlots = slots.filter(s => s.available);
 
     return (
-        <div className="space-y-4 pt-4 border-t border-stone-100 text-right" dir="rtl">
-            <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">تاريخ البداية</label>
+        <div className="space-y-6 pt-6 border-t border-stone-100 text-right" dir="rtl">
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                    <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-widest">تاريخ البداية</label>
                     <input type="date" value={startDate}
                         onChange={(e) => { setStartDate(e.target.value); setHasChecked(false); }}
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-xs outline-none focus:border-stone-900 transition-all" />
+                        className="w-full h-11 px-4 bg-stone-50 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-900 transition-all" />
                 </div>
-                <div className="space-y-1">
-                    <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">تاريخ النهاية</label>
+                <div className="space-y-1.5">
+                    <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-widest">تاريخ النهاية</label>
                     <input type="date" value={endDate}
                         onChange={(e) => { setEndDate(e.target.value); setHasChecked(false); }}
                         min={startDate || new Date().toISOString().split('T')[0]}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-xs outline-none focus:border-stone-900 transition-all" />
+                        className="w-full h-11 px-4 bg-stone-50 border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-900 transition-all" />
                 </div>
             </div>
 
             {totalDays > 0 && (
-                <div className="flex justify-between items-center px-2 text-xs text-stone-500">
-                    <span>{totalDays} يوم</span>
-                    <span className="font-bold text-stone-900">{totalPrice.toFixed(2)} ج.م</span>
+                <div className="flex justify-between items-center p-4 bg-stone-50 rounded-xl border border-stone-100 text-sm">
+                    <span className="text-stone-500">المدة: {totalDays} يوم</span>
+                    <span className="font-bold text-stone-900">الإجمالي: {totalPrice.toFixed(2)} ج.م</span>
                 </div>
             )}
 
             <button onClick={checkAvailability} disabled={!startDate || !endDate || checking}
-                className="w-full py-3 bg-stone-900 text-white rounded-2xl text-[10px] uppercase tracking-widest font-bold hover:bg-stone-800 transition-all disabled:opacity-40 flex items-center justify-center gap-2">
-                {checking ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Calendar className="w-3.5 h-3.5" />}
+                className="w-full h-12 bg-stone-900 text-white rounded-xl text-sm font-bold hover:bg-stone-800 transition-all disabled:opacity-40 flex items-center justify-center gap-2">
+                {checking ? <Loader2 className="w-5 h-5 animate-spin" /> : <Calendar className="w-5 h-5" />}
                 التحقق من التوفر
             </button>
 
             {bookingSuccess && (
-                <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3">
+                <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center gap-3 animate-in">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
                     <p className="text-emerald-700 text-sm font-medium">تم تأكيد الحجز بنجاح!</p>
                 </div>
             )}
 
             {hasChecked && (
-                <div className="space-y-3">
+                <div className="space-y-4 animate-in">
                     {availableSlots.length > 0 ? (
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-2 text-emerald-600 font-bold text-[10px] uppercase tracking-widest">
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs uppercase tracking-widest">
                                 <CheckCircle2 className="w-4 h-4" />
-                                يتوفر {availableSlots.length} مقاس(ات)
+                                يتوفر {availableSlots.length} مقاس(ات) جاهزة للحجز
                             </div>
                             <div className="flex flex-wrap gap-2">
                                 {availableSlots.map(({ item }) => (
                                     <button key={item.id} type="button"
                                         onClick={() => setSelectedItem(selectedItem?.id === item.id ? null : item)}
-                                        className={`px-3 py-1.5 rounded-full text-[10px] font-bold border transition-all ${selectedItem?.id === item.id
+                                        className={`h-10 px-4 rounded-lg text-xs font-bold border transition-all ${selectedItem?.id === item.id
                                             ? 'bg-stone-900 text-white border-stone-900'
                                             : 'bg-white text-stone-600 border-stone-200 hover:border-stone-900'}`}>
                                         مقاس {item.size}{item.color ? ` · ${item.color}` : ''}
@@ -166,27 +166,27 @@ export default function AvailabilityChecker({ dress }: Props) {
                             </div>
 
                             {selectedItem && (
-                                <form onSubmit={handleBook} className="p-5 bg-stone-50 rounded-2xl border border-stone-100 space-y-3 mt-2">
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-stone-500">
-                                        حجز — مقاس {selectedItem.size} · الإجمالي {totalPrice.toFixed(2)} ج.م
-                                    </p>
-                                    <input required placeholder="اسم العميل" value={customerName}
-                                        onChange={(e) => setCustomerName(e.target.value)}
-                                        className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all text-right" />
-                                    <input required type="email" placeholder="البريد الإلكتروني للعميل" value={customerEmail}
-                                        onChange={(e) => setCustomerEmail(e.target.value)}
-                                        className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all text-right" />
+                                <form onSubmit={handleBook} className="p-6 bg-stone-50 border border-stone-200 rounded-xl space-y-4 mt-2">
+                                    <h4 className="text-xs font-bold uppercase tracking-widest text-stone-500 mb-2">إتمام الحجز - مقاس {selectedItem.size}</h4>
+                                    <div className="space-y-3">
+                                        <input required placeholder="اسم العميل الكامل" value={customerName}
+                                            onChange={(e) => setCustomerName(e.target.value)}
+                                            className="w-full h-11 px-4 bg-white border border-stone-200 rounded-lg outline-none focus:border-stone-900 text-sm" />
+                                        <input required type="email" placeholder="البريد الإلكتروني" value={customerEmail}
+                                            onChange={(e) => setCustomerEmail(e.target.value)}
+                                            className="w-full h-11 px-4 bg-white border border-stone-200 rounded-lg outline-none focus:border-stone-900 text-sm" />
+                                    </div>
                                     <button type="submit" disabled={booking}
-                                        className="w-full py-3 bg-stone-900 text-white rounded-xl text-[10px] uppercase tracking-widest font-bold hover:bg-stone-800 transition-all flex items-center justify-center gap-2 disabled:opacity-50">
-                                        {booking ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ShoppingBag className="w-3.5 h-3.5" />}
-                                        تأكيد الحجز
+                                        className="w-full h-12 bg-stone-900 text-white rounded-lg text-sm font-bold hover:bg-stone-800 transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-sm">
+                                        {booking ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingBag className="w-5 h-5" />}
+                                        تأكيد الحجز والدفع
                                     </button>
                                 </form>
                             )}
                         </div>
                     ) : (
-                        <div className="flex items-center gap-2 text-rose-600 font-bold text-[10px] uppercase tracking-widest">
-                            <XCircle className="w-4 h-4" /> لا تتوفر مقاسات لهذه التواريخ
+                        <div className="flex items-center gap-2 text-rose-600 font-bold text-xs uppercase tracking-widest p-4 bg-rose-50 rounded-xl border border-rose-100">
+                            <XCircle className="w-5 h-5" /> لا تتوفر مقاسات لهذه التواريخ المطلوبة
                         </div>
                     )}
                 </div>

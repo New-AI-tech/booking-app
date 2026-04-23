@@ -1,43 +1,54 @@
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
+  font-family: 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
 }
 
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  @apply bg-stone-50 text-stone-900;
 }
 
-/* RTL Helpers */
-[dir="rtl"] .ltr-only {
-  display: none;
+/* Professional UI Overrides */
+@layer components {
+  .btn-primary {
+    @apply bg-stone-900 text-white rounded-xl px-6 py-2.5 text-sm font-bold hover:bg-stone-800 transition-all shadow-sm;
+  }
+  
+  .btn-secondary {
+    @apply border border-stone-200 text-stone-600 rounded-xl px-6 py-2.5 text-sm font-bold hover:bg-stone-50 transition-all;
+  }
+
+  .card {
+    @apply bg-white border border-stone-200 rounded-2xl shadow-sm overflow-hidden;
+  }
+
+  .input-field {
+    @apply w-full h-11 px-4 bg-white border border-stone-200 rounded-xl outline-none focus:border-stone-900 focus:ring-1 focus:ring-stone-900 transition-all text-sm;
+  }
+
+  .label-text {
+    @apply block text-xs font-bold text-stone-500 uppercase tracking-widest mb-1.5;
+  }
 }
 
-[dir="ltr"] .rtl-only {
-  display: none;
+/* RTL Specific Adjustments */
+[dir="rtl"] .font-serif {
+  font-family: 'Cairo', serif;
 }
 
-/* Custom transitions */
+/* Clean transitions */
 .animate-in {
-  animation-duration: 500ms;
-  animation-fill-mode: both;
+  animation: fade-in 0.4s ease-out;
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-@keyframes zoom-in {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.fade-in { animation-name: fade-in; }
-.zoom-in { animation-name: zoom-in; }
