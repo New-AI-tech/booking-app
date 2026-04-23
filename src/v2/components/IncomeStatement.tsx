@@ -27,7 +27,11 @@ export default function IncomeStatement() {
             })
             .catch((err) => {
                 console.error('Financial data fetch error:', err);
-                setError('فشل في تحميل البيانات المالية.');
+                if (err.code === 'failed-precondition') {
+                    setError('النظام يقوم بتحديث الفهارس، يرجى الانتظار دقيقتين.');
+                } else {
+                    setError('فشل في تحميل البيانات المالية.');
+                }
             })
             .finally(() => setLoading(false));
     }, [month, year]);
