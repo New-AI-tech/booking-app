@@ -81,13 +81,19 @@ function LayoutContent({ userProfile, loading }: { userProfile: UserProfile | nu
                     <Route path="/" element={
                         <ProtectedRoute userProfile={userProfile} loading={loading}>
                             <div className="relative w-full h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
-                                {/* High-Definition Fullscreen Background */}
-                                <div 
-                                    className="absolute inset-0 bg-cover bg-center bg-fixed transition-transform duration-1000 scale-100"
-                                    style={{ backgroundImage: "url('/hero-bg.jpg')" }}
-                                />
+                                {/* High-Definition Fullscreen Video Background */}
+                                <video 
+                                    autoPlay 
+                                    loop 
+                                    muted 
+                                    playsInline 
+                                    className="absolute inset-0 w-full h-full object-cover z-0"
+                                >
+                                    <source src="/background-video.mp4" type="video/mp4" />
+                                </video>
+                                
                                 {/* Sophisticated Dark Vignette Overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 backdrop-blur-[1px]" />
+                                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 backdrop-blur-[1px] z-10" />
                                 
                                 {/* Centered Hero Content */}
                                 <div className="relative z-10 text-center space-y-10 px-6 max-w-4xl animate-in">
