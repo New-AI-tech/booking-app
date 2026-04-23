@@ -22,11 +22,10 @@ export default function DressForm({ initialData, onSuccess, onCancel }: DressFor
         name: '',
         description: '',
         basePrice: 0,
-        category: 'Evening Wear',
+        category: 'فساتين سهرة',
         imageUrl: '',
         cleaningBufferDays: 1,
     });
-    // Physical items to create alongside the dress (only shown for new dresses)
     const [items, setItems] = useState<PhysicalItemDraft[]>([{ size: 'M', color: '', sku: '' }]);
 
     const addItemRow = () => setItems(prev => [...prev, { size: 'M', color: '', sku: '' }]);
@@ -42,9 +41,7 @@ export default function DressForm({ initialData, onSuccess, onCancel }: DressFor
             if (initialData) {
                 await inventoryService.updateDress(initialData.id, formData);
             } else {
-                // 1. Create the dress design
                 const dressId = await inventoryService.addDress(formData);
-                // 2. Create each physical inventory item
                 await Promise.all(
                     items
                         .filter(item => item.size.trim() !== '')
@@ -61,7 +58,7 @@ export default function DressForm({ initialData, onSuccess, onCancel }: DressFor
             }
             onSuccess();
         } catch (err) {
-            setError('Failed to save. Please check your input and try again.');
+            setError('فشل الحفظ. يرجى التحقق من البيانات والمحاولة مرة أخرى.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -69,12 +66,12 @@ export default function DressForm({ initialData, onSuccess, onCancel }: DressFor
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-10 space-y-10 border border-stone-100 shadow-xl max-w-2xl mx-auto">
+        <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-10 space-y-10 border border-stone-100 shadow-xl max-w-2xl mx-auto text-right" dir="rtl">
             <header className="space-y-1">
                 <h2 className="text-3xl font-serif font-medium text-stone-900">
-                    {initialData ? 'Update Design' : 'Register New Design'}
+                    {initialData ? 'تحديث التصميم' : 'تسجيل تصميم جديد'}
                 </h2>
-                <p className="text-stone-400 text-sm">Add a new piece and its physical inventory in one step.</p>
+                <p className="text-stone-400 text-sm">أضف قطعة جديدة ومخزونها الفعلي في خطوة واحدة.</p>
             </header>
 
             {error && (
@@ -83,101 +80,100 @@ export default function DressForm({ initialData, onSuccess, onCancel }: DressFor
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">Dress Name *</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">اسم الفستان *</label>
                     <input
                         type="text" required value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 focus:bg-white transition-all font-serif text-lg"
-                        placeholder="e.g. Midnight Silk Gown"
+                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 focus:bg-white transition-all font-serif text-lg text-right"
+                        placeholder="مثال: فستان سهرة حريري أسود"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">Category *</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">الفئة *</label>
                     <select
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all appearance-none cursor-pointer"
+                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all appearance-none cursor-pointer text-right"
                     >
-                        <option>Evening Wear</option>
-                        <option>Cocktail</option>
-                        <option>Bridal</option>
-                        <option>Accessories</option>
+                        <option>فساتين سهرة</option>
+                        <option>كوكتيل</option>
+                        <option>زفاف</option>
+                        <option>إكسسوارات</option>
                     </select>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">Daily Price ($) *</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">السعر اليومي (ج.م) *</label>
                     <input
                         type="number" required min={0} value={formData.basePrice}
                         onChange={(e) => setFormData({ ...formData, basePrice: Number(e.target.value) })}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all"
+                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all text-right"
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">Cleaning Buffer (Days) *</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">فترة التنظيف (أيام) *</label>
                     <input
                         type="number" required min={0} max={14} value={formData.cleaningBufferDays}
                         onChange={(e) => setFormData({ ...formData, cleaningBufferDays: Number(e.target.value) })}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all"
+                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all text-right"
                     />
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">Image URL</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">رابط الصورة</label>
                     <div className="relative">
-                        <ImageIcon className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300" />
+                        <ImageIcon className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300" />
                         <input
                             type="url" value={formData.imageUrl ?? ''}
                             onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                            className="w-full pl-12 pr-6 py-4 bg-stone-50 border border-stone-200 rounded-2xl outline-none focus:border-stone-900 transition-all text-sm"
+                            className="w-full pr-12 pl-6 py-4 bg-stone-50 border border-stone-200 rounded-2xl outline-none focus:border-stone-900 transition-all text-sm text-right"
                             placeholder="https://images.unsplash.com/..."
                         />
                     </div>
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">Description</label>
+                    <label className="text-xs font-bold text-stone-400 uppercase tracking-widest">الوصف</label>
                     <textarea
                         rows={2} value={formData.description ?? ''}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all text-sm resize-none"
-                        placeholder="Style details, fabric, occasion..."
+                        className="w-full bg-stone-50 border border-stone-200 rounded-2xl px-6 py-4 outline-none focus:border-stone-900 transition-all text-sm resize-none text-right"
+                        placeholder="تفاصيل التصميم، القماش، المناسبة..."
                     />
                 </div>
             </div>
 
-            {/* Physical Inventory Section — only for new dresses */}
             {!initialData && (
                 <div className="space-y-4 pt-4 border-t border-stone-100">
                     <div className="flex justify-between items-center">
                         <div>
-                            <h3 className="text-sm font-bold text-stone-900 uppercase tracking-widest">Physical Items</h3>
-                            <p className="text-xs text-stone-400 mt-0.5">Add each size you have in stock.</p>
+                            <h3 className="text-sm font-bold text-stone-900 uppercase tracking-widest">القطع الفعلية</h3>
+                            <p className="text-xs text-stone-400 mt-0.5">أضف كل مقاس يتوفر لديك في المخزن.</p>
                         </div>
                         <button type="button" onClick={addItemRow}
                             className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-stone-900 transition-colors px-4 py-2 border border-stone-200 rounded-xl">
-                            <Plus className="w-3 h-3" /> Add Size
+                            <Plus className="w-3 h-3" /> إضافة مقاس
                         </button>
                     </div>
                     <div className="space-y-3">
                         {items.map((item, idx) => (
                             <div key={idx} className="flex gap-3 items-center">
                                 <input
-                                    placeholder="Size *" required value={item.size}
+                                    placeholder="المقاس *" required value={item.size}
                                     onChange={(e) => updateItem(idx, 'size', e.target.value)}
-                                    className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all"
+                                    className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all text-right"
                                 />
                                 <input
-                                    placeholder="Color" value={item.color}
+                                    placeholder="اللون" value={item.color}
                                     onChange={(e) => updateItem(idx, 'color', e.target.value)}
-                                    className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all"
+                                    className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all text-right"
                                 />
                                 <input
-                                    placeholder="SKU" value={item.sku}
+                                    placeholder="رمز SKU" value={item.sku}
                                     onChange={(e) => updateItem(idx, 'sku', e.target.value)}
-                                    className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all"
+                                    className="flex-1 bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-stone-900 transition-all text-right"
                                 />
                                 {items.length > 1 && (
                                     <button type="button" onClick={() => removeItemRow(idx)}
@@ -194,12 +190,12 @@ export default function DressForm({ initialData, onSuccess, onCancel }: DressFor
             <div className="flex gap-4 pt-2">
                 <button type="button" onClick={onCancel}
                     className="flex-1 py-4 border border-stone-200 rounded-2xl font-bold text-stone-400 text-[10px] uppercase tracking-widest hover:bg-stone-50 transition-all">
-                    Discard
+                    إلغاء
                 </button>
                 <button type="submit" disabled={loading}
                     className="flex-1 py-4 bg-stone-900 text-white rounded-2xl font-bold text-[10px] uppercase tracking-widest hover:bg-stone-800 transition-all shadow-xl shadow-stone-100 flex items-center justify-center gap-2">
                     {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                    {initialData ? 'Update Piece' : 'Register & Add to Stock'}
+                    {initialData ? 'تحديث القطعة' : 'تسجيل وإضافة للمخزون'}
                 </button>
             </div>
         </form>

@@ -41,7 +41,7 @@ export default function AppEntry() {
     }, []);
 
     if (loading) return (
-        <div className="h-screen flex items-center justify-center bg-stone-50">
+        <div className="h-screen flex items-center justify-center bg-stone-50" dir="rtl">
             <Loader2 className="w-8 h-8 text-stone-900 animate-spin" />
         </div>
     );
@@ -49,23 +49,23 @@ export default function AppEntry() {
     return (
         <ErrorBoundary>
             <BrowserRouter>
-                <div className="min-h-screen bg-stone-50">
+                <div className="min-h-screen bg-stone-50" dir="rtl">
                     {userProfile && (
                         <nav className="bg-white border-b border-stone-100 px-8 py-3 flex justify-between items-center sticky top-0 z-50 shadow-sm">
                             <Link to="/" className="flex items-center gap-2 font-serif text-xl text-stone-900 hover:text-stone-700 transition-colors">
-                                <Sparkles className="w-5 h-5 text-amber-500" /> VogueRent
+                                <Sparkles className="w-5 h-5 text-amber-500" /> ڤوج رينت
                             </Link>
-                            <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-stone-500">
+                            <div className="flex gap-8 text-[11px] font-bold uppercase tracking-widest text-stone-500">
                                 <Link to="/inventory" className="hover:text-stone-900 transition-colors flex items-center gap-2">
-                                    <Package className="w-3 h-3" /> Inventory
+                                    <Package className="w-3 h-3" /> المخزون
                                 </Link>
                                 <Link to="/staff" className="hover:text-stone-900 transition-colors flex items-center gap-2">
-                                    <LayoutDashboard className="w-3 h-3" /> Dashboard
+                                    <LayoutDashboard className="w-3 h-3" /> لوحة التحكم
                                 </Link>
                                 {userProfile.role === 'admin' && (
                                     <>
                                         <Link to="/admin" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
-                                            <ShieldCheck className="w-3 h-3" /> Admin
+                                            <ShieldCheck className="w-3 h-3" /> الإدارة
                                         </Link>
                                         <Link to="/income" className="text-amber-600 hover:text-stone-900 transition-colors flex items-center gap-2">
                                             <BarChart2 className="w-3 h-3" /> كشف الدخل
@@ -74,14 +74,14 @@ export default function AppEntry() {
                                 )}
                             </div>
                             <div className="flex items-center gap-4">
-                                <div className="hidden sm:block text-right">
+                                <div className="hidden sm:block text-left">
                                     <p className="text-[10px] font-bold text-stone-900 uppercase tracking-tighter">{userProfile.displayName}</p>
-                                    <p className="text-[9px] text-stone-400 font-bold uppercase tracking-widest">{userProfile.role}</p>
+                                    <p className="text-[9px] text-stone-400 font-bold uppercase tracking-widest">{userProfile.role === 'admin' ? 'مدير' : 'موظف'}</p>
                                 </div>
                                 <button
                                     onClick={() => authService.signOut()}
                                     className="p-2 text-stone-300 hover:text-rose-600 transition-colors"
-                                    title="Sign Out"
+                                    title="تسجيل الخروج"
                                 >
                                     <LogOut className="w-4 h-4" />
                                 </button>
@@ -100,16 +100,16 @@ export default function AppEntry() {
                                             <Sparkles className="w-12 h-12 text-amber-500" />
                                         </div>
                                         <h1 className="text-6xl font-serif text-stone-900 tracking-tight">
-                                            Welcome, <span className="italic text-stone-500">{userProfile?.displayName?.split(' ')[0]}</span>
+                                            أهلاً بك، <span className="italic text-stone-500">{userProfile?.displayName?.split(' ')[0]}</span>
                                         </h1>
                                         <p className="text-xl text-stone-400 font-serif italic max-w-lg mx-auto">
-                                            Managing the world's most exclusive evening wear collection.
+                                            إدارة المجموعة الأكثر تميزاً لفساتين السهرة في العالم.
                                         </p>
                                         <Link
                                             to="/inventory"
                                             className="inline-block mt-4 px-10 py-5 bg-stone-900 text-white rounded-2xl font-bold text-[10px] uppercase tracking-widest hover:bg-stone-800 transition-all shadow-xl shadow-stone-200"
                                         >
-                                            Enter Collection
+                                            دخول المجموعة
                                         </Link>
                                     </div>
                                 </ProtectedRoute>
