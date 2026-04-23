@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import { authService } from './services/authService';
 import { UserProfile } from './types';
 import { StaffDashboard } from './components/StaffDashboard';
@@ -8,7 +8,20 @@ import IncomeStatement from './components/IncomeStatement';
 import LoginPage from './components/Auth/LoginPage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import DressForm from './components/Inventory/DressForm';
 import { Package, LayoutDashboard, ShieldCheck, LogOut, Sparkles, Loader2, BarChart2 } from 'lucide-react';
+
+function AdminOnboarding() {
+    const navigate = useNavigate();
+    return (
+        <div className="py-12">
+            <DressForm 
+                onSuccess={() => navigate('/inventory')} 
+                onCancel={() => navigate('/inventory')} 
+            />
+        </div>
+    );
+}
 
 export default function AppEntry() {
     const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -122,11 +135,7 @@ export default function AppEntry() {
 
                             <Route path="/admin" element={
                                 <ProtectedRoute userProfile={userProfile} loading={loading} requiredRole="admin">
-                                    <div className="py-20 text-center space-y-4">
-                                        <ShieldCheck className="w-12 h-12 text-amber-500 mx-auto" />
-                                        <h2 className="text-4xl font-serif text-stone-900">Admin Control Center</h2>
-                                        <p className="text-stone-400 italic font-serif">Advanced system settings and designer management.</p>
-                                    </div>
+                                    <AdminOnboarding />
                                 </ProtectedRoute>
                             } />
                         </Routes>
