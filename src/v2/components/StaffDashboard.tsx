@@ -55,7 +55,8 @@ export function StaffDashboard() {
             </header>
 
             <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-                <table className="w-full text-right border-collapse">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-right border-collapse min-w-[600px]">
                     <thead className="bg-stone-50/80 border-b border-stone-200">
                         <tr>
                             <th className="px-8 py-5 text-[10px] font-bold text-stone-500 uppercase tracking-widest text-right">العميل</th>
@@ -105,6 +106,7 @@ export function StaffDashboard() {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     );

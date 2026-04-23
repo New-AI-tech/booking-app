@@ -71,7 +71,7 @@ export default function InventoryList({ isAdmin }: Props) {
                         <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300" />
                         <input type="text" placeholder="بحث في التصاميم..." value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pr-12 pl-4 py-3 bg-white border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-900 w-64 shadow-sm transition-all" />
+                            className="pr-12 pl-4 py-3 bg-white border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-900 w-full md:w-64 shadow-sm transition-all" />
                     </div>
                     {isAdmin && (
                         <button onClick={() => setShowForm(true)}
