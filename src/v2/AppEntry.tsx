@@ -53,7 +53,7 @@ export default function AppEntry() {
                     {userProfile && (
                         <nav className="bg-white border-b border-stone-200 px-6 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
                             <Link to="/" className="flex items-center gap-2 font-bold text-xl text-stone-900 hover:opacity-80 transition-opacity">
-                                <Sparkles className="w-6 h-6 text-stone-900" /> ڤوج رينت
+                                <Sparkles className="w-6 h-6 text-stone-900" /> آتليه فريال الحصري
                             </Link>
                             <div className="flex gap-6 text-sm font-semibold text-stone-500">
                                 <Link to="/inventory" className="hover:text-stone-900 transition-colors flex items-center gap-2">
@@ -100,7 +100,7 @@ export default function AppEntry() {
                                             <Sparkles className="w-12 h-12 text-stone-900" />
                                         </div>
                                         <h1 className="text-5xl font-bold text-stone-900 tracking-tight">
-                                            أهلاً بك، <span className="text-stone-500 font-medium">{userProfile?.displayName?.split(' ')[0]}</span>
+                                            أهلاً بك في آتليه فريال الحصري
                                         </h1>
                                         <p className="text-lg text-stone-500 max-w-lg mx-auto">
                                             إدارة المجموعة الأكثر تميزاً لفساتين السهرة في مكان واحد.
