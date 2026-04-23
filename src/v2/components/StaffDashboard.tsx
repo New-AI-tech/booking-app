@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { bookingService } from '../services/bookingService';
 import { BookingWithDress } from '../types';
-import { Calendar, User } from 'lucide-react';
+import { Calendar, User, Search, Filter } from 'lucide-react';
 
 export function StaffDashboard() {
     const [bookings, setBookings] = useState<BookingWithDress[]>([]);
@@ -15,11 +15,11 @@ export function StaffDashboard() {
     }, []);
 
     const getStatusStyle = (status: string) => {
-        const base = "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ";
+        const base = "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ";
         switch (status) {
-            case 'active': return base + "bg-emerald-100 text-emerald-700 border border-emerald-200";
-            case 'confirmed': return base + "bg-blue-100 text-blue-700 border border-blue-200";
-            default: return base + "bg-stone-100 text-stone-600 border border-stone-200";
+            case 'active': return base + "bg-emerald-50 text-emerald-700 border-emerald-100";
+            case 'confirmed': return base + "bg-blue-50 text-blue-700 border-blue-100";
+            default: return base + "bg-stone-50 text-stone-600 border-stone-200";
         }
     };
 
@@ -34,65 +34,71 @@ export function StaffDashboard() {
     };
 
     if (loading) return (
-        <div className="p-20 text-center animate-pulse text-stone-400 font-serif italic" dir="rtl">
-            جاري تحميل بيانات الحجوزات المباشرة...
+        <div className="p-20 text-center animate-pulse text-stone-400 font-medium" dir="rtl">
+            جاري تحميل بيانات الحجوزات...
         </div>
     );
 
     return (
-        <div className="space-y-10" dir="rtl">
-            <header className="flex justify-between items-end border-b border-stone-100 pb-6 text-right">
+        <div className="space-y-8 animate-in" dir="rtl">
+            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-stone-200 pb-8">
                 <div className="space-y-1">
-                    <h2 className="text-4xl font-serif font-medium text-stone-900 tracking-tight">بوابة الموظفين</h2>
-                    <p className="text-stone-400 text-sm">رقابة فورية على الإيجارات الحالية والحجوزات القادمة.</p>
+                    <h2 className="text-4xl font-bold text-stone-900 tracking-tight">بوابة الموظفين</h2>
+                    <p className="text-stone-500 text-lg">متابعة الحجوزات المباشرة وحالة المخزون.</p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                        <input placeholder="بحث في الحجوزات..." className="h-10 pr-9 pl-4 bg-white border border-stone-200 rounded-lg text-sm outline-none focus:border-stone-900 w-48 shadow-sm transition-all" />
+                    </div>
                 </div>
             </header>
 
-            <div className="bg-white rounded-[2.5rem] shadow-xl shadow-stone-200/50 overflow-hidden border border-stone-100">
+            <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
                 <table className="w-full text-right border-collapse">
-                    <thead className="bg-stone-50/50 border-b border-stone-100">
+                    <thead className="bg-stone-50/80 border-b border-stone-200">
                         <tr>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-right">العميل / الاتصال</th>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-right">تفاصيل القطعة</th>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-right">فترة الإيجار</th>
-                            <th className="px-10 py-6 text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center">الحالة</th>
+                            <th className="px-8 py-5 text-[10px] font-bold text-stone-500 uppercase tracking-widest text-right">العميل</th>
+                            <th className="px-8 py-5 text-[10px] font-bold text-stone-500 uppercase tracking-widest text-right">التصميم</th>
+                            <th className="px-8 py-5 text-[10px] font-bold text-stone-500 uppercase tracking-widest text-right">فترة الإيجار</th>
+                            <th className="px-8 py-5 text-[10px] font-bold text-stone-500 uppercase tracking-widest text-center">الحالة</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-stone-50">
+                    <tbody className="divide-y divide-stone-100">
                         {bookings.length === 0 ? (
                             <tr>
-                                <td colSpan={4} className="px-10 py-16 text-center text-stone-400 font-serif italic">
-                                    لا توجد حجوزات نشطة حالياً.
+                                <td colSpan={4} className="px-8 py-20 text-center text-stone-400 font-medium">
+                                    لا توجد حجوزات مسجلة حالياً.
                                 </td>
                             </tr>
                         ) : bookings.map((booking) => (
-                            <tr key={booking.id} className="hover:bg-stone-50/40 transition-colors group">
-                                <td className="px-10 py-8">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center text-stone-400 group-hover:bg-stone-900 group-hover:text-white transition-all">
+                            <tr key={booking.id} className="hover:bg-stone-50/50 transition-colors">
+                                <td className="px-8 py-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 bg-stone-100 rounded-full flex items-center justify-center text-stone-500">
                                             <User className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-stone-900">{booking.customerName}</p>
-                                            <p className="text-xs text-stone-400">{booking.customerEmail}</p>
+                                            <p className="font-bold text-stone-900 text-sm">{booking.customerName}</p>
+                                            <p className="text-[10px] text-stone-400 font-medium">{booking.customerEmail}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-10 py-8">
-                                    <p className="font-medium text-stone-800">{booking.dress?.name || 'تصميم قياسي'}</p>
-                                    <p className="text-[10px] text-stone-400 font-bold uppercase tracking-tighter">
-                                        رمز: {booking.id.substring(0, 8)}
+                                <td className="px-8 py-6">
+                                    <p className="font-bold text-stone-800 text-sm">{booking.dress?.name || 'تصميم قياسي'}</p>
+                                    <p className="text-[10px] text-stone-400 font-bold uppercase tracking-widest">
+                                        #{booking.id.substring(0, 6).toUpperCase()}
                                     </p>
                                 </td>
-                                <td className="px-10 py-8">
-                                    <div className="flex items-center gap-2 text-stone-600 text-sm">
+                                <td className="px-8 py-6">
+                                    <div className="flex items-center gap-2 text-stone-600 text-xs font-medium">
                                         <Calendar className="w-3.5 h-3.5" />
                                         <span>{booking.startDate.toDate().toLocaleDateString('ar-EG')}</span>
                                         <span className="text-stone-300">←</span>
                                         <span>{booking.endDate.toDate().toLocaleDateString('ar-EG')}</span>
                                     </div>
                                 </td>
-                                <td className="px-10 py-8 text-center">
+                                <td className="px-8 py-6 text-center">
                                     <span className={getStatusStyle(booking.status)}>{translateStatus(booking.status)}</span>
                                 </td>
                             </tr>

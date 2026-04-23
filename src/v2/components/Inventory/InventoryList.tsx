@@ -3,7 +3,7 @@ import { inventoryService } from '../../services/inventoryService';
 import { Dress } from '../../types';
 import AvailabilityChecker from './AvailabilityChecker';
 import DressForm from './DressForm';
-import { Search, Plus, Loader2, Package, ArrowRight } from 'lucide-react';
+import { Search, Plus, Loader2, Package, ArrowRight, Filter } from 'lucide-react';
 
 interface Props {
     isAdmin: boolean;
@@ -36,20 +36,21 @@ export default function InventoryList({ isAdmin }: Props) {
 
     if (checkerDress) {
         return (
-            <div className="max-w-lg mx-auto space-y-8" dir="rtl">
+            <div className="max-w-xl mx-auto space-y-8 animate-in" dir="rtl">
                 <button onClick={() => setCheckerDress(null)}
-                    className="text-[10px] font-bold uppercase tracking-widest text-stone-400 hover:text-stone-900 transition-colors flex items-center gap-2">
-                    <ArrowRight className="w-3.5 h-3.5" /> العودة إلى المجموعة
+                    className="text-xs font-bold text-stone-500 hover:text-stone-900 transition-colors flex items-center gap-2">
+                    <ArrowRight className="w-4 h-4" /> العودة للمجموعة
                 </button>
-                <div className="bg-white rounded-3xl p-8 shadow-xl border border-stone-100 space-y-4">
-                    <div className="flex items-center gap-4">
+                <div className="bg-white rounded-2xl p-8 border border-stone-200 shadow-sm space-y-6">
+                    <div className="flex items-center gap-6">
                         {checkerDress.imageUrl && (
                             <img src={checkerDress.imageUrl} alt={checkerDress.name}
-                                className="w-20 h-20 object-cover rounded-2xl flex-shrink-0" />
+                                className="w-24 h-32 object-cover rounded-xl flex-shrink-0" />
                         )}
-                        <div>
-                            <h2 className="text-2xl font-serif text-stone-900">{checkerDress.name}</h2>
-                            <p className="text-stone-400 text-sm">{checkerDress.category} · {checkerDress.basePrice} ج.م / يوم</p>
+                        <div className="space-y-1">
+                            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">{checkerDress.category}</span>
+                            <h2 className="text-3xl font-bold text-stone-900">{checkerDress.name}</h2>
+                            <p className="text-xl font-bold text-stone-700">{checkerDress.basePrice} ج.م <span className="text-sm text-stone-400 font-normal">/ يوم</span></p>
                         </div>
                     </div>
                     <AvailabilityChecker dress={checkerDress} />
@@ -59,76 +60,76 @@ export default function InventoryList({ isAdmin }: Props) {
     }
 
     return (
-        <div className="space-y-10" dir="rtl">
-            <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-10 animate-in" dir="rtl">
+            <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-stone-200 pb-8">
                 <div>
-                    <h2 className="text-3xl font-serif font-medium text-stone-900 mb-1">المجموعة</h2>
-                    <p className="text-stone-400 text-sm">أرقى فساتين السهرة والتصاميم الحصرية.</p>
+                    <h2 className="text-4xl font-bold text-stone-900">المجموعة</h2>
+                    <p className="text-stone-500 text-lg mt-1">فساتين سهرة حصرية وتصاميم عالمية.</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                     <div className="relative">
                         <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-300" />
-                        <input type="text" placeholder="بحث..." value={search}
+                        <input type="text" placeholder="بحث في التصاميم..." value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pr-12 pl-4 py-3 bg-white border border-stone-100 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-stone-900/5 w-56 shadow-sm" />
+                            className="pr-12 pl-4 py-3 bg-white border border-stone-200 rounded-xl text-sm outline-none focus:border-stone-900 w-64 shadow-sm transition-all" />
                     </div>
                     {isAdmin && (
                         <button onClick={() => setShowForm(true)}
-                            className="flex items-center gap-2 px-5 py-3 bg-stone-900 text-white rounded-2xl text-[10px] uppercase tracking-widest font-bold hover:bg-stone-800 transition-all shadow-xl shadow-stone-200">
-                            <Plus className="w-3.5 h-3.5" /> تصميم جديد
+                            className="flex items-center gap-2 px-6 py-3 bg-stone-900 text-white rounded-xl text-sm font-bold hover:bg-stone-800 transition-all shadow-md">
+                            <Plus className="w-4 h-4" /> تصميم جديد
                         </button>
                     )}
                 </div>
             </header>
 
             {loading ? (
-                <div className="py-24 flex flex-col items-center gap-4 text-stone-300">
-                    <Loader2 className="w-8 h-8 animate-spin" />
-                    <p className="font-serif italic text-sm">جاري تحميل المجموعة...</p>
+                <div className="py-32 flex flex-col items-center gap-4 text-stone-300">
+                    <Loader2 className="w-10 h-10 animate-spin" />
+                    <p className="font-medium">جاري تحميل المجموعة...</p>
                 </div>
             ) : filtered.length === 0 ? (
-                <div className="py-24 text-center space-y-4 bg-white rounded-3xl border-2 border-dashed border-stone-100">
-                    <Package className="w-10 h-10 text-stone-200 mx-auto" />
-                    <p className="text-stone-400 font-serif italic">لم يتم العثور على تصاميم.</p>
+                <div className="py-24 text-center space-y-4 bg-white rounded-2xl border border-dashed border-stone-300">
+                    <Package className="w-12 h-12 text-stone-200 mx-auto" />
+                    <p className="text-stone-400 text-lg">لم يتم العثور على أي تصاميم تطابق بحثك.</p>
                     {isAdmin && (
                         <button onClick={() => setShowForm(true)}
-                            className="text-[10px] font-bold uppercase tracking-widest text-stone-900 hover:underline">
-                            أضف التصميم الأول ←
+                            className="text-stone-900 font-bold hover:underline">
+                            أضف قطعة جديدة الآن
                         </button>
                     )}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filtered.map(dress => (
                         <div key={dress.id}
-                            className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-stone-100 flex flex-col">
-                            <div className="h-64 relative overflow-hidden bg-stone-100">
+                            className="group bg-white rounded-2xl overflow-hidden border border-stone-200 hover:border-stone-400 transition-all shadow-sm hover:shadow-md flex flex-col">
+                            <div className="h-80 relative overflow-hidden bg-stone-100">
                                 <img
                                     src={dress.imageUrl || `https://picsum.photos/seed/${dress.id}/600/800`}
                                     alt={dress.name}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 />
                                 <div className="absolute top-4 right-4">
-                                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] uppercase font-bold tracking-widest shadow-sm">
+                                    <span className="px-3 py-1 bg-white border border-stone-200 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-sm">
                                         {dress.category}
                                     </span>
                                 </div>
                             </div>
                             <div className="p-6 flex flex-col flex-1 space-y-4 text-right">
                                 <div className="flex justify-between items-start">
-                                    <h3 className="text-xl font-serif font-medium text-stone-900">{dress.name}</h3>
-                                    <div className="text-left flex-shrink-0 mr-2">
-                                        <p className="text-lg font-serif font-bold">{dress.basePrice} ج.م</p>
-                                        <p className="text-[10px] text-stone-400 uppercase font-bold">/ يوم</p>
+                                    <h3 className="text-xl font-bold text-stone-900">{dress.name}</h3>
+                                    <div className="text-left flex-shrink-0 mr-4">
+                                        <p className="text-lg font-bold text-stone-900">{dress.basePrice} ج.م</p>
+                                        <p className="text-[10px] text-stone-400 font-bold">/ يوم</p>
                                     </div>
                                 </div>
                                 {dress.description && (
-                                    <p className="text-stone-500 text-sm line-clamp-2 italic font-serif">{dress.description}</p>
+                                    <p className="text-stone-500 text-sm line-clamp-2">{dress.description}</p>
                                 )}
                                 <div className="mt-auto pt-4">
                                     <button onClick={() => setCheckerDress(dress)}
-                                        className="w-full py-3 border border-stone-200 rounded-2xl text-[10px] uppercase tracking-widest font-bold text-stone-600 hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all">
-                                        التحقق من التوفر والحجز
+                                        className="w-full h-11 bg-stone-50 border border-stone-200 rounded-xl text-sm font-bold text-stone-700 hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all">
+                                        التحقق والحجز
                                     </button>
                                 </div>
                             </div>
