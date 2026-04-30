@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inschatbot - Legal & Privacy</title>
+    <style>
+        :root {
+            --primary-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #6c757d;
+            --heading-color: #1a1a2e;
+            --link-color: #0056b3;
+        }
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header, footer {
+            background-color: var(--heading-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+        header h1 { margin: 0 0 0.25rem 0; font-size: 2rem; }
+        header p { margin: 0; font-size: 0.9rem; opacity: 0.8; }
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            box-sizing: border-box;
+        }
+        .intro { text-align: center; margin-bottom: 3rem; }
+        .intro h2 { color: var(--heading-color); }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .nav-card {
+            background: var(--card-bg);
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+        }
+        .nav-card h3 { margin: 0 0 1rem 0; color: var(--heading-color); font-size: 1.3rem; }
+        .nav-card p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; flex-grow: 1; }
+        .btn {
+            display: inline-block;
+            background: var(--heading-color);
+            color: white;
+            padding: 0.7rem 1.2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #2a2a4e; }
+        footer p { margin: 0.25rem 0; font-size: 0.9rem; }
+        footer .date { font-size: 0.8rem; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>inschatbot</h1>
+        <p>AI-Powered Assistant for Instagram Business</p>
+    </header>
+
+    <main>
+        <div class="intro">
+            <h2>Legal & Compliance Directory</h2>
+            <p>Welcome to the official legal hub for inschatbot, managed by Ahmed Backer. Please select a document below to review our policies and instructions.</p>
+        </div>
+
+        <div class="nav-grid">
+            <div class="nav-card">
+                <h3>Privacy Policy</h3>
+                <p>Learn how we collect, process, and protect your data while using our automated reply services.</p>
+                <a href="privacy.html" class="btn">Read Privacy Policy</a>
+            </div>
+            
+            <div class="nav-card">
+                <h3>Terms of Service</h3>
+                <p>Review the rules, guidelines, and disclaimers for using the inschatbot platform.</p>
+                <a href="terms.html" class="btn">Read Terms of Service</a>
+            </div>
+            
+            <div class="nav-card">
+                <h3>Data Deletion</h3>
+                <p>Find step-by-step instructions on how to request the complete deletion of your data from our servers.</p>
+                <a href="data-deletion.html" class="btn">View Instructions</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Ahmed Backer (Egypt). All rights reserved.</p>
+        <p class="date">Last Updated: April 30, 2026</p>
+    </footer>
+</body>
+</html>
